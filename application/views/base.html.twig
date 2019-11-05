@@ -1,0 +1,24 @@
+{# templates/base.html.twig #}
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Ogłoszenia *dla sprzedawcy{% endblock %}</title>
+    <link rel="stylesheet" href="{{  base_url('bootstrap/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ base_url('css/style.css') }}"/>
+    <script src="{{ base_url('js/jquery-3.3.1.min.js') }}"></script>
+    <script src="{{ base_url('js/popper.min.js') }}"></script>
+    <script src="{{ base_url('bootstrap/js/bootstrap.min.js') }}"></script>
+    {% block jsscripts %}{% endblock %}
+</head>
+<body>
+    {% block navbar %}
+		{% include 'page/navbar.html.twig' %}
+    {% endblock %}
+    {% block body %}
+    <div class="container">
+        <h1>Pusta Strona</h1>
+    </div>
+    {% endblock %}
+</body>
+</html>
