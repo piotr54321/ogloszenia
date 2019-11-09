@@ -17,7 +17,7 @@ class Home extends AC_Controller
     }
 
     public function index(){
-		$data = $this->pageData();
+		$data = $this->page_data();
         $this->twig->display('home/index.html', $data);
     }
 }

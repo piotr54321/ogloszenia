@@ -1,0 +1,38 @@
+{# views/users/access.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block body %}
+	{% include 'page/alerts.html.twig' %}
+	{% if find_user %}
+	<div class="container">
+		<h1>Użytkownicy role/ zasoby</h1>
+		<nav>
+			<div class="nav nav-tabs" id="nav-tab" role="tablist">
+				<a class="nav-item nav-link active" id="nav-roles-tab" data-toggle="tab" href="#nav-roles" role="tab" aria-controls="nav-roles" aria-selected="true">Role użytkownika [{{ find_user.username }}]</a>
+				<a class="nav-item nav-link" id="nav-resources-tab" data-toggle="tab" href="#nav-resources" role="tab" aria-controls="nav-resources" aria-selected="false">Zasoby użytkownika [{{ find_user.username }}]</a>
+			</div>
+		</nav>
+		<div class="tab-content" id="nav-tabContent">
+			<div class="tab-pane fade show active" id="nav-roles" role="tabpanel" aria-labelledby="nav-roles-tab">
+				<form method="post">
+					<div class="form-group">
+						<input id="userID" name="userID" value="{{ find_user.id }}" hidden>
+						<label for="roles">Role użytkownika (Grupy)</label>
+						<select multiple class="form-control" id="roles" name="roles[]">
+							{% for user_role in find_user_roles %}
+								<option value="{{ user_role.id }}" {% if user_role.user_have == 1 %}selected{%  endif %}>Ranga: {{ user_role.rank }} - {{ user_role.rolename }}</option>
+							{% endfor %}
+						</select>
+					</div>
+					<button type="submit" class="btn btn-primary">Zatwierdź</button>
+				</form>
+			</div>
+			<div class="tab-pane fade" id="nav-resources" role="tabpanel" aria-labelledby="nav-resources-tab">RZECZY 2</div>
+		</div>
+		<hr/>
+		<a href="{{ base_url('uzytkownicy/index') }}" role="button" class="btn btn-primary btn-sm">Wszyscy żytkownicy <i class="fas fa-users"></i></a>
+	{% if 'uzytkownicy:edytuj' in dostepneStrony %}<a href="{{ base_url('uzytkownicy/edytuj/') }}{{ find_user.id }}" role="button" class="btn btn-primary btn-sm">Dane użytkownika [{{ find_user.username }}] <i class="fas fa-user-edit"></i></a>{% endif %}
+	</div>
+	{% endif %}
+{% endblock %}

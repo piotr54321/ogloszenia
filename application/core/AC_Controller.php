@@ -38,7 +38,7 @@ class AC_Controller extends CI_Controller{
         }
     }
 
-    function pageData(){
+    function page_data(){
 		$data = [];
 		$user = $this->usermodel->getUser($this->session->user_id);
 		$rangi = $this->aclsystem->getAllUserRanksList;

@@ -15,12 +15,12 @@ class Ogloszenia extends AC_Controller
     }
 
     function index(){
-		$data = $this->pageData();
+		$data = $this->page_data();
 		$this->twig->display('oglszenia/index.html', $data);
     }
 
     function noweogloszenie(){
-		$data = $this->pageData();
+		$data = $this->page_data();
 		$this->twig->display('oglszenia/noweogloszenie.html', $data);
     }
 

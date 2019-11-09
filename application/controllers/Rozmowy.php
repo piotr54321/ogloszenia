@@ -15,12 +15,12 @@ class Rozmowy extends AC_Controller
     }
 
     function index(){
-		$data = $this->pageData();
+		$data = $this->page_data();
 		$this->twig->display('chat/index.html', $data);
     }
 
     function historia(){
-		$data = $this->pageData();
+		$data = $this->page_data();
 		$this->twig->display('chat/historia.html', $data);
     }
 

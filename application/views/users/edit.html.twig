@@ -1,0 +1,38 @@
+{# views/users/edit.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block body %}
+	{% include 'page/alerts.html.twig' %}
+	{% if findUser %}
+		<div class="container">
+			<h1>Edytuj użytkownika</h1>
+			<form method="post">
+				<input id="userID" name="userID" value="{{ findUser.id }}" hidden>
+				<div class="form-group">
+					<label for="username">Nazwa użytkownika</label>
+					<input type="text" class="form-control" id="username" name="username" placeholder="{{ findUser.username }}">
+				</div>
+				<div class="form-group">
+					<label for="email">Adres E-mail</label>
+					<input type="email" class="form-control" id="email" name="email" placeholder="{{findUser.email}}">
+				</div>
+				<div class="form-group">
+					<label>Zbanowany?</label>
+					<div class="form-check form-check-inline">
+						<input class="form-check-input" type="radio" name="banned" id="banned" value="0" {% if findUser.banned == 0 %}checked{% endif %}>
+						<label class="form-check-label" for="banned">Nie</label>
+					</div>
+					<div class="form-check form-check-inline">
+						<input class="form-check-input" type="radio" name="banned" id="banned" value="1" {% if findUser.banned == 1 %}checked{% endif %}>
+						<label class="form-check-label" for="banned">Tak</label>
+					</div>
+				</div>
+				<button type="submit" class="btn btn-primary">Zatwierdź</button>
+			</form>
+			<hr/>
+			<a href="{{ base_url('uzytkownicy/index') }}" role="button" class="btn btn-primary btn-sm">Wszyscy żytkownicy <i class="fas fa-users"></i></a>
+			{% if 'uzytkownicy:uprawnienia' in dostepneStrony %}<a href="{{ base_url('uzytkownicy/uprawnienia/') }}{{ findUser.id }}" role="button" class="btn btn-primary btn-sm">Uprawnienia użytkownika [{{ findUser.username }}] <i class="fas fa-universal-access"></i></a>{% endif %}
+		</div>
+	{% endif %}
+{% endblock %}
