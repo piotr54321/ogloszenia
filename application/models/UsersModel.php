@@ -105,11 +105,15 @@ class UsersModel extends CI_Model
 		if(!is_numeric($dataUpdate['id'])){
 			return false;
 		}
-		//issetSet($this->db, $dataUpdate, 'username');
-		//issetSet($this->db, $dataUpdate, 'email');
+
+		if(isset($dataUpdate['password'])){
+			$this->db->set('password', password_hash($dataUpdate['password'], PASSWORD_DEFAULT));
+		}
+		issetSet($this->db, $dataUpdate, 'username');
+		issetSet($this->db, $dataUpdate, 'email');
 		issetSet($this->db, $dataUpdate, 'banned');
 		issetWhere($this->db, $dataUpdate, 'id');
-		$query = $this->db->update('users');
+		$this->db->update('users');
 		if($this->db->affected_rows() > 0){
 			return TRUE;
 		}else{

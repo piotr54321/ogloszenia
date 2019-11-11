@@ -16,8 +16,9 @@
 		"twig/twig": "v1.42.3",
 		"chriskacerguis/codeigniter-restserver": "^3.0",
 		"firebase/php-jwt": "^5.0",
-      "ext-json": "*"
-    },
+      "ext-json": "*",
+		"ext-curl": "*"
+	},
 	"suggest": {
 		"paragonie/random_compat": "Provides better randomness in PHP 5.x"
 	},

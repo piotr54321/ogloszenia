@@ -15,11 +15,13 @@ class Ogloszenia extends AC_Controller
     }
 
     function index(){
+    	//TODO
 		$data = $this->page_data();
 		$this->twig->display('oglszenia/index.html', $data);
     }
 
     function noweogloszenie(){
+    	//TODO
 		$data = $this->page_data();
 		$this->twig->display('oglszenia/noweogloszenie.html', $data);
     }

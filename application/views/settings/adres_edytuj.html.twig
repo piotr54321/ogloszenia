@@ -4,9 +4,9 @@
 
 {% block body %}
 	{% include 'page/alerts.html.twig' %}
-	<h1>Edytuj adres</h1>
-	{% if address_edited %}
-		<div class="container">
+	<div class="container-fluid">
+		<h1>Edytuj adres</h1>
+		{% if address_edited %}
 			<form method="post">
 				<input id="addressID" name="addressID" value="{{ address_edited.id_address }}" hidden>
 				<div class="form-group">
@@ -38,8 +38,8 @@
 				</div>
 				<button type="submit" class="btn btn-primary">Zatwierdź</button>
 			</form>
-		</div>
-	{% endif %}
+		{% endif %}
+	</div>
 	<hr/>
 	<a href="{{ base_url('ustawienia/index') }}" role="button" class="btn btn-primary btn-sm">Ustawienia <i class="fas fa-cogs"></i></a>
 	<a href="{{ base_url('ustawienia/adresy') }}" role="button" class="btn btn-primary btn-sm">Moje adresy <i class="fas fa-address-card"></i></a>

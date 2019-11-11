@@ -3,41 +3,44 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-	<h1>Użytkownicy</h1>
-	{% if allUsers == false %}
-		<div class="alert alert-info" role="alert">
-			Brak użytkowników
-		</div>
-	{% else %}
-		<div class="table-responsive">
-			<table class="table">
-				<thead class="thead-dark">
-					<tr>
-						<th scope="col">#</th>
-						<th scope="col">Nazwa użytkownika</th>
-						<th scope="col">E-mail</th>
-						<th scope="col">Zbanowany?</th>
-						<th scope="col">Operacja</th>
-					</tr>
-				</thead>
-				<tbody>
-				{% set itemNr = 1 %}
-				{% for item in allUsers %}
-					<tr>
-						<td scope="row">{{ itemNr }}</td>
-						{% set itemNr = itemNr + 1 %}
-						<td>{{ item.username }}</td>
-						<td>{{ item.email }}</td>
-						<td>{% if item.banned == 0 %}Nie{% else %}Tak{% endif %}</td>
-						<td>
-							{% set itemId = item.id %}
-							{% if 'uzytkownicy:edytuj' in dostepneStrony %}<a href="{{ base_url('uzytkownicy/edytuj/') }}{{ itemId }}" role="button" class="btn btn-primary btn-sm">Edytuj <i class="fas fa-user-edit"></i></a>{% endif %}
-							{% if 'uzytkownicy:uprawnienia' in dostepneStrony %}<a href="{{ base_url('uzytkownicy/uprawnienia/') }}{{ itemId }}" role="button" class="btn btn-primary btn-sm">Uprawnienia <i class="fas fa-universal-access"></i></a>{% endif %}
-						</td>
-					</tr>
-				{% endfor %}
-				</tbody>
-			</table>
-		</div>
-	{% endif %}
+	{% include 'page/alerts.html.twig' %}
+	<div class="container-fluid">
+		<h1>Użytkownicy</h1>
+		{% if allUsers == false %}
+			<div class="alert alert-info" role="alert">
+				Brak użytkowników
+			</div>
+		{% else %}
+			<div class="table-responsive">
+				<table class="table">
+					<thead class="thead-dark">
+						<tr>
+							<th scope="col">#</th>
+							<th scope="col">Nazwa użytkownika</th>
+							<th scope="col">E-mail</th>
+							<th scope="col">Zbanowany?</th>
+							<th scope="col">Operacja</th>
+						</tr>
+					</thead>
+					<tbody>
+					{% set itemNr = 1 %}
+					{% for item in allUsers %}
+						<tr>
+							<td scope="row">{{ itemNr }}</td>
+							{% set itemNr = itemNr + 1 %}
+							<td>{{ item.username }}</td>
+							<td>{{ item.email }}</td>
+							<td>{% if item.banned == 0 %}Nie{% else %}Tak{% endif %}</td>
+							<td>
+								{% set itemId = item.id %}
+								{% if 'uzytkownicy:edytuj' in dostepneStrony %}<a href="{{ base_url('uzytkownicy/edytuj/') }}{{ itemId }}" role="button" class="btn btn-primary btn-sm">Edytuj <i class="fas fa-user-edit"></i></a>{% endif %}
+								{% if 'uzytkownicy:uprawnienia' in dostepneStrony %}<a href="{{ base_url('uzytkownicy/uprawnienia/') }}{{ itemId }}" role="button" class="btn btn-primary btn-sm">Uprawnienia <i class="fas fa-universal-access"></i></a>{% endif %}
+							</td>
+						</tr>
+					{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		{% endif %}
+	</div>
 {% endblock %}

@@ -4,27 +4,32 @@
 
 {% block body %}
 	{% include 'page/alerts.html.twig' %}
-	<div class="container">
+	<div class="container-fluid">
+		<h1>Dodaj nowy adres</h1>
 		<form method="post">
 			<div class="form-group">
 				<label for="city">Miasto</label>
-				<input type="text" class="form-control" id="city" name="city" placeholder="Nazwa miejscowości" required>
+				<input type="text" class="form-control{% if errors.city %} is-invalid{% endif %}" id="city" name="city" placeholder="Nazwa miejscowości">
+				{% if errors.city %}<div class="invalid-feedback">{{ errors.city }}</div>{% endif %}
 			</div>
 			<div class="form-group">
 				<label for="street">Ulica</label>
-				<input type="text" class="form-control" id="street" name="street" placeholder="Nazwa ulicy" required>
+				<input type="text" class="form-control{% if errors.street %} is-invalid{% endif %}" id="street" name="street" placeholder="Nazwa ulicy">
+				{% if errors.street %}<div class="invalid-feedback">{{ errors.street }}</div>{% endif %}
 			</div>
 			<div class="form-group">
 				<label for="home">Numer domu/ lokalu</label>
-				<input type="text" class="form-control" id="home" name="home" placeholder="Nr domu/ lokalu" required>
+				<input type="text" class="form-control{% if errors.home %} is-invalid{% endif %}" id="home" name="home" placeholder="Nr domu/ lokalu">
+				{% if errors.home %}<div class="invalid-feedback">{{ errors.home }}</div>{% endif %}
 			</div>
 			<div class="form-group">
 				<label for="postal_code">Kod pocztowy</label>
-				<input type="text" class="form-control" id="postal_code" name="postal_code" placeholder="Kod pocztowy" required>
+				<input type="text" class="form-control{% if errors.postal_code %} is-invalid{% endif %}" id="postal_code" name="postal_code" placeholder="Kod pocztowy">
+				{% if errors.postal_code %}<div class="invalid-feedback">{{ errors.postal_code }}</div>{% endif %}
 			</div>
 			<div class="form-group">
 				<label for="main_address">Adres główny?</label>
-				<div class="form-check form-check-inline">
+				<div class="form-check form-check-inline{% if errors.main_address %} is-invalid{% endif %}">
 					<input class="form-check-input" type="radio" name="main_address" id="main_address" value="0" checked>
 					<label class="form-check-label" for="main_address">Nie</label>
 				</div>
@@ -32,6 +37,7 @@
 					<input class="form-check-input" type="radio" name="main_address" id="main_address" value="1">
 					<label class="form-check-label" for="main_address">Tak</label>
 				</div>
+				{% if errors.main_address %}<div class="invalid-feedback">{{ errors.main_address }}</div>{% endif %}
 			</div>
 			<button type="submit" class="btn btn-primary">Zatwierdź</button>
 		</form>

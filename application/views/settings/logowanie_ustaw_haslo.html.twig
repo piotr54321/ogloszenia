@@ -1,0 +1,30 @@
+{# views/settings/logowanie_ustaw_haslo.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block body %}
+	{% include 'page/alerts.html.twig' %}
+	<div class="container-fluid">
+		<h1>Ustaw hasło</h1>
+		<form method="post">
+			<div class="form-group">
+				<label for="password_old">Twoje aktualne hasło</label>
+				<input type="password" class="form-control{% if errors.password_old %} is-invalid{% endif %}" id="password_old" name="password_old" placeholder="******">
+				{% if errors.password_old %}<div class="invalid-feedback">{{ errors.password_old }}</div>{% endif %}
+			</div>
+			<div class="form-group">
+				<label for="password">Twoje nowe hasło</label>
+				<input type="password" class="form-control{% if errors.password %} is-invalid{% endif %}" id="password" name="password" placeholder="******">
+				{% if errors.password_old %}<div class="invalid-feedback">{{ errors.password }}</div>{% endif %}
+			</div>
+			<div class="form-group">
+				<label for="password2">Powtórz nowe hasło</label>
+				<input type="password" class="form-control{% if errors.password2 %} is-invalid{% endif %}" id="password2" name="password2" placeholder="******">
+				{% if errors.password2 %}<div class="invalid-feedback">{{ errors.password2 }}</div>{% endif %}
+			</div>
+			<button type="submit" class="btn btn-primary">Zatwierdź</button>
+		</form>
+	</div>
+	<hr/>
+	<a href="{{ base_url('ustawienia/logowanie') }}" role="button" class="btn btn-primary btn-sm">Podstawowe dane logowania <i class="fas fa-key"></i></a>
+{% endblock %}

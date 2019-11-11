@@ -3,5 +3,23 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-	<h1>Dane logowania</h1>
+	{% include 'page/alerts.html.twig' %}
+	<div class="container-fluid">
+		<h1>Dane logowania</h1>
+		<form method="post">
+			<div class="form-group">
+				<label for="username">Twoja nazwa</label>
+				<input type="text" class="form-control{% if errors.username %} is-invalid{% endif %}" id="username" name="username" placeholder="{{ user.username }}">
+				{% if errors.username %}<div class="invalid-feedback">{{ errors.username }}</div>{% endif %}
+			</div>
+			<div class="form-group">
+				<label for="email">Twój adres E-mail</label>
+				<input type="email" class="form-control{% if errors.email %} is-invalid{% endif %}" id="email" name="email" placeholder="{{user.email}}">
+				{% if errors.email %}<div class="invalid-feedback">{{ errors.email }}</div>{% endif %}
+			</div>
+			<button type="submit" class="btn btn-primary">Zatwierdź</button>
+		</form>
+	</div>
+	<hr/>
+	<a href="{{ base_url('ustawienia/logowanie_ustaw_haslo') }}" role="button" class="btn btn-primary btn-sm">Ustaw hasło <i class="fas fa-key"></i></a>
 {% endblock %}

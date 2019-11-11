@@ -5,17 +5,19 @@
 {% block body %}
 	{% include 'page/alerts.html.twig' %}
 	{% if findUser %}
-		<div class="container">
+		<div class="container-fluid">
 			<h1>Edytuj użytkownika</h1>
 			<form method="post">
 				<input id="userID" name="userID" value="{{ findUser.id }}" hidden>
 				<div class="form-group">
 					<label for="username">Nazwa użytkownika</label>
-					<input type="text" class="form-control" id="username" name="username" placeholder="{{ findUser.username }}">
+					<input type="text" class="form-control{% if errors.username %} is-invalid{% endif %}" id="username" name="username" placeholder="{{ findUser.username }}">
+					{% if errors.username %}<div class="invalid-feedback">{{ errors.username }}</div>{% endif %}
 				</div>
 				<div class="form-group">
 					<label for="email">Adres E-mail</label>
-					<input type="email" class="form-control" id="email" name="email" placeholder="{{findUser.email}}">
+					<input type="email" class="form-control{% if errors.email %} is-invalid{% endif %}" id="email" name="email" placeholder="{{findUser.email}}">
+					{% if errors.email %}<div class="invalid-feedback">{{ errors.email }}</div>{% endif %}
 				</div>
 				<div class="form-group">
 					<label>Zbanowany?</label>

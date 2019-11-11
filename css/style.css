@@ -1,11 +1,10 @@
-
-
 .jumbotron{
     background-image: linear-gradient(120deg, #FFE74C, #FF5964, #35A7FF);
 }
 
 .navbar{
-    background-color: #E4CC37;
+    background-color: #e4cc37;
+	border-top: 5px solid #fde44b;
 }
 
 /*.btn-color{

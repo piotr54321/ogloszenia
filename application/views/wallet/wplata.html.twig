@@ -3,5 +3,25 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-	<h1>Wpłać środki</h1>
+	{% include 'page/alerts.html.twig' %}
+	<div class="container-fluid">
+		<h1>Wpłać środki</h1>
+		<form method="post">
+			<div class="form-group">
+				<label for="id_currency">Wpłacana waluta</label>
+				<select id="id_currency" name="id_currency" class="form-control{% if errors.id_currency %} is-invalid{% endif %}">
+					{% for item in available_currencies %}
+						<option value="{{ item.id_currency }}" {% if item.currency_code == 'PLN' %}selected{% endif %}>{{ item.currency_code }} - {{ item.full_name}}</option>
+					{% endfor %}
+				</select>
+				{% if errors.id_currency %}<div class="invalid-feedback">{{ errors.id_currency }}</div>{% endif %}
+			<div class="form-group">
+				<label for="amount">Liczba środków</label>
+				<input type="number" min="0" max="10000" step="10" class="form-control{% if errors.amount %} is-invalid{% endif %}" id="amount" name="amount" placeholder="Ilość środków np.: 100" required>
+				{% if errors.amount %}<div class="invalid-feedback">{{ errors.amount }}</div>{% endif %}
+			</div>
+			<button type="submit" name="submit" class="btn btn-primary" value="PayPal">Wpłać</button>
+		</form>
+		<hr/>
+	</div>
 {% endblock %}

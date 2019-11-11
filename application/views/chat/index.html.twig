@@ -3,5 +3,19 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+		<div id="vue_app">
+			${ message }
+		</div>
+
+		<script>
+			var app = new Vue({
+				el: '#vue_app',
+                delimiters: ['${', '}'],
+				data: {
+					message: 'Hello Vue!'
+				}
+			})
+		</script>
 
 {% endblock %}

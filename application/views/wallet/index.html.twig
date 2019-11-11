@@ -3,6 +3,38 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-	<h1>Twoje środki</h1>
+	{% include 'page/alerts.html.twig' %}
+	<div class="container-fluid">
+		<h1>Twoje środki</h1>
 
+		<div class="table-responsive">
+			<table class="table">
+				<thead class="thead-dark">
+				<tr>
+					<th scope="col">#</th>
+					<th scope="col">Kod waluty</th>
+					<th scope="col">Ilość</th>
+					<th scope="col">Operacja</th>
+				</tr>
+				</thead>
+				<tbody>
+				{% set itemNr = 1 %}
+				{% for item in my_wallets %}
+					<tr>
+						<td scope="row">{{ itemNr }}</td>
+						{% set itemNr = itemNr + 1 %}
+						<td>{{ item.currency_code }}</td>
+						<td>{{ item.amount }}</td>
+						<td>
+							{% set itemId = item.id_wallet %}
+							{% if 'mojportfel:wplata' in dostepneStrony %}<a href="{{ base_url('mojportfel/wplata/') }}{{ itemId }}" role="button" class="btn btn-primary btn-sm">Wpłać środki <i class="fas fa-edit"></i></a>{% endif %}
+						</td>
+					</tr>
+				{% endfor %}
+				</tbody>
+			</table>
+		</div>
+
+		<hr/>
+	</div>
 {% endblock %}

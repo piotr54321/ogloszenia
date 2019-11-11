@@ -19,11 +19,12 @@
 					<div class="form-group">
 						<input id="userID" name="userID" value="{{ find_user.id }}" hidden>
 						<label for="roles">Role użytkownika (Grupy)</label>
-						<select multiple class="form-control" id="roles" name="roles[]">
+						<select multiple class="form-control{% if errors.roles %} is-invalid{% endif %}" id="roles" name="roles[]">
 							{% for user_role in find_user_roles %}
 								<option value="{{ user_role.id }}" {% if user_role.user_have == 1 %}selected{%  endif %}>Ranga: {{ user_role.rank }} - {{ user_role.rolename }}</option>
 							{% endfor %}
 						</select>
+						{% if errors.roles %}<div class="invalid-feedback">{{ errors.roles }}</div>{% endif %}
 					</div>
 					<button type="submit" class="btn btn-primary">Zatwierdź</button>
 				</form>
