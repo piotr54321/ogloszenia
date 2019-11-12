@@ -26,11 +26,7 @@ class Ustawienia extends AC_Controller
 		if (!isset($data)) {
 			$data = [];
 		}
-		$this->data = array_merge(
-			$this->page_data(),
-			$data,
-			$this->session->flashdata()
-		);
+		$this->data = array_merge($this->page_data(), $data, $this->session->flashdata());
 	}
 
 	function index()
@@ -40,9 +36,7 @@ class Ustawienia extends AC_Controller
 
 	function adresy()
 	{
-		$this->data['user_adressess'] = $this->adressessmodel->adressessFind([
-			'id_user' => $this->data['user']['id']
-		]);
+		$this->data['user_adressess'] = $this->adressessmodel->adressessFind(['id_user' => $this->data['user']['id']]);
 		//var_dump($this->data['user_adressess']);
 		$this->twig->display('settings/adresy.html', $this->data);
 	}
@@ -50,63 +44,27 @@ class Ustawienia extends AC_Controller
 	function adres_edytuj($address_id = null)
 	{
 		if (is_numeric($address_id)) {
-			$this->data[
-				'address_edited'
-			] = $this->adressessmodel->adressessFind([
-				'id_user' => $this->data['user']['id'],
-				'id_address' => $address_id
-			])[0];
+			$this->data['address_edited'] = $this->adressessmodel->adressessFind(['id_user' => $this->data['user']['id'], 'id_address' => $address_id])[0];
 		}
-		if (
-			!is_numeric($address_id) ||
-			$this->data['address_edited'] == false
-		) {
+		if (!is_numeric($address_id) || $this->data['address_edited'] == false) {
 			$this->data['error'] = 'Nieprawidłowe ID adresu';
 		} else {
 			//var_dump($this->data['address_edited']);
 			if ($this->input->post()) {
-				$this->form_validation->set_rules(
-					'city',
-					'city',
-					'trim|xss_clean'
-				);
-				$this->form_validation->set_rules(
-					'street',
-					'street',
-					'trim|xss_clean'
-				);
-				$this->form_validation->set_rules(
-					'home',
-					'home',
-					'trim|xss_clean'
-				);
-				$this->form_validation->set_rules(
-					'postal_code',
-					'postal_code',
-					'trim|xss_clean'
-				);
-				$this->form_validation->set_rules(
-					'main_address',
-					'main_address',
-					'trim|xss_clean'
-				);
-				$this->form_validation->set_rules(
-					'addressID',
-					'addressID',
-					'trim|xss_clean|required'
-				);
+				$this->form_validation->set_rules('name', 'name', 'trim|xss_clean');
+				$this->form_validation->set_rules('city', 'city', 'trim|xss_clean');
+				$this->form_validation->set_rules('street', 'street', 'trim|xss_clean');
+				$this->form_validation->set_rules('home', 'home', 'trim|xss_clean');
+				$this->form_validation->set_rules('postal_code', 'postal_code', 'trim|xss_clean');
+				$this->form_validation->set_rules('main_address', 'main_address', 'trim|xss_clean');
+				$this->form_validation->set_rules('addressID', 'addressID', 'trim|xss_clean|required');
 
 				if ($this->form_validation->run() == false) {
-					$this->session->set_flashdata(
-						'info',
-						'Wprowadzono niepoprawne dane'
-					);
-					redirect(
-						'/ustawienia/adres_edytuj/' . $address_id,
-						'location'
-					);
+					$this->session->set_flashdata('info', 'Wprowadzono niepoprawne dane');
+					redirect('/ustawienia/adres_edytuj/' . $address_id, 'location');
 				} else {
 					$data_address['update'] = [
+						'name' => $this->input->post('name'),
 						'city' => $this->input->post('city'),
 						'street' => $this->input->post('street'),
 						'home' => $this->input->post('home'),
@@ -119,20 +77,11 @@ class Ustawienia extends AC_Controller
 					];
 
 					if ($this->adressessmodel->addressUpdate($data_address)) {
-						$this->session->set_flashdata(
-							'complete',
-							'Poprawnie zmieniono dane adresu'
-						);
-						redirect(
-							'/ustawienia/adres_edytuj/' . $address_id,
-							'location'
-						);
+						$this->session->set_flashdata('complete', 'Poprawnie zmieniono dane adresu');
+						redirect('/ustawienia/adres_edytuj/' . $address_id, 'location');
 					} else {
 						$this->session->set_flashdata('error', 'Niepowodzenie');
-						redirect(
-							'/ustawienia/adres_edytuj/' . $address_id,
-							'location'
-						);
+						redirect('/ustawienia/adres_edytuj/' . $address_id, 'location');
 					}
 				}
 			}
@@ -144,61 +93,46 @@ class Ustawienia extends AC_Controller
 	function adres_dodaj()
 	{
 		if ($this->input->post()) {
-			$this->form_validation->set_rules(
-				'city',
-				'city',
-				'trim|xss_clean|required',
+			$this->form_validation->set_rules('name', 'name', 'trim|xss_clean|required',
+				[
+					'required' => 'Wprowadź nazwę (np. Imię Nazwisko lub nazwa firmy)'
+				]
+			);
+			$this->form_validation->set_rules('city', 'city', 'trim|xss_clean|required',
 				[
 					'required' => 'Nie wprowadziłeś nazwy miejscowości'
 				]
 			);
-			$this->form_validation->set_rules(
-				'street',
-				'street',
-				'trim|xss_clean|required',
+			$this->form_validation->set_rules('street', 'street', 'trim|xss_clean|required',
 				[
 					'required' => 'Nie wprowadziłeś nazwy ulicy'
 				]
 			);
-			$this->form_validation->set_rules(
-				'home',
-				'home',
-				'trim|xss_clean|required',
+			$this->form_validation->set_rules('home', 'home', 'trim|xss_clean|required',
 				[
 					'required' => 'Nie wprowadziłeś numeru domu/ lokalu'
 				]
 			);
-			$this->form_validation->set_rules(
-				'postal_code',
-				'postal_code',
-				'trim|xss_clean|required',
+			$this->form_validation->set_rules('postal_code', 'postal_code', 'trim|xss_clean|required',
 				[
 					'required' => 'Nie wprowadziłeś kodu pocztowego'
 				]
 			);
-			$this->form_validation->set_rules(
-				'main_address',
-				'main_address',
-				'trim|xss_clean|required',
+			$this->form_validation->set_rules('main_address', 'main_address', 'trim|xss_clean|required',
 				[
 					'required' =>
 						'Nie wskazano czy adres jest głównym adresem czy też nim nie jest'
 				]
 			);
 			if ($this->form_validation->run() == false) {
-				$this->session->set_flashdata(
-					'info',
-					'Wprowadzono niepoprawne dane'
-				);
-				$this->session->set_flashdata(
-					'errors',
-					$this->form_validation->error_array()
-				);
+				$this->session->set_flashdata('info', 'Wprowadzono niepoprawne dane');
+				$this->session->set_flashdata('errors', $this->form_validation->error_array());
 				redirect('/ustawienia/adres_dodaj/', 'location');
 			} else {
 				$data_address['insert'] = [
 					'id_user' => $this->data['user']['id'],
 					'city' => $this->input->post('city'),
+					'name' => $this->input->post('name'),
 					'street' => $this->input->post('street'),
 					'home' => $this->input->post('home'),
 					'postal_code' => $this->input->post('postal_code'),
@@ -209,14 +143,8 @@ class Ustawienia extends AC_Controller
 					$data_address
 				);
 				if ($addres_insert_status) {
-					$this->session->set_flashdata(
-						'complete',
-						'Poprawnie dodano adres'
-					);
-					redirect(
-						'/ustawienia/adres_edytuj/' . $addres_insert_status,
-						'location'
-					);
+					$this->session->set_flashdata('complete', 'Poprawnie dodano adres');
+					redirect('/ustawienia/adres_edytuj/' . $addres_insert_status, 'location');
 				} else {
 					$this->session->set_flashdata('error', 'Niepowodzenie');
 					redirect('/ustawienia/adres_dodaj/', 'location');
@@ -235,10 +163,7 @@ class Ustawienia extends AC_Controller
 				'trim|xss_clean|required'
 			);
 			if ($this->form_validation->run() == false) {
-				$this->session->set_flashdata(
-					'info',
-					'Wprowadzono niepoprawne dane'
-				);
+				$this->session->set_flashdata('info', 'Wprowadzono niepoprawne dane');
 				redirect('/ustawienia/adres_edytuj/', 'location');
 			} else {
 				$data_address['delete'] = [
@@ -248,21 +173,11 @@ class Ustawienia extends AC_Controller
 					'id_user' => $this->data['user']['id']
 				];
 				if ($this->adressessmodel->addressDelete($data_address)) {
-					$this->session->set_flashdata(
-						'complete',
-						'Poprawnie usunięto adres'
-					);
+					$this->session->set_flashdata('complete', 'Poprawnie usunięto adres');
 					redirect('/ustawienia/adresy/', 'location');
 				} else {
-					$this->session->set_flashdata(
-						'error',
-						'Niepowodzenie podczas usuwania adresu'
-					);
-					redirect(
-						'/ustawienia/adres_edytuj/' .
-							$data_address['delete']['id_address'],
-						'location'
-					);
+					$this->session->set_flashdata('error', 'Niepowodzenie podczas usuwania adresu');
+					redirect('/ustawienia/adres_edytuj/' . $data_address['delete']['id_address'], 'location');
 				}
 			}
 		}
@@ -275,19 +190,13 @@ class Ustawienia extends AC_Controller
 		])[0];
 
 		if ($this->input->post()) {
-			$this->form_validation->set_rules(
-				'username',
-				'username',
-				'trim|xss_clean|is_unique[users.username]|min_length[6]',
+			$this->form_validation->set_rules('username', 'username', 'trim|xss_clean|is_unique[users.username]|min_length[6]',
 				[
 					'is_unique' => 'Podana nazwa użytkownika już istnieje',
 					'min_lenght' => 'Nazwa powinna mieć przynajmniej 6 znaków'
 				]
 			);
-			$this->form_validation->set_rules(
-				'email',
-				'email',
-				'trim|xss_clean|is_unique[users.email]|valid_email',
+			$this->form_validation->set_rules('email', 'email', 'trim|xss_clean|is_unique[users.email]|valid_email',
 				[
 					'is_unique' => 'Podany adres e-mail już istnieje',
 					'valid_email' => 'Podany adres e-mail jest nieprawidłowy'
@@ -295,14 +204,8 @@ class Ustawienia extends AC_Controller
 			);
 
 			if ($this->form_validation->run() == false) {
-				$this->session->set_flashdata(
-					'info',
-					'Wprowadzono niepoprawne dane'
-				);
-				$this->session->set_flashdata(
-					'errors',
-					$this->form_validation->error_array()
-				);
+				$this->session->set_flashdata('info', 'Wprowadzono niepoprawne dane');
+				$this->session->set_flashdata('errors', $this->form_validation->error_array());
 				redirect('/ustawienia/logowanie/', 'location');
 			} else {
 				$user_data_set = [
@@ -311,10 +214,7 @@ class Ustawienia extends AC_Controller
 					'id' => $this->data['user']['id']
 				];
 				if ($this->usersmodel->userUpdate($user_data_set)) {
-					$this->session->set_flashdata(
-						'complete',
-						'Poprawnie zmieniono dane użytkownika'
-					);
+					$this->session->set_flashdata('complete', 'Poprawnie zmieniono dane użytkownika');
 					redirect('/ustawienia/logowanie/', 'location');
 				} else {
 					$this->session->set_flashdata('error', 'Niepowodzenie');
@@ -333,28 +233,19 @@ class Ustawienia extends AC_Controller
 		])[0];
 
 		if ($this->input->post()) {
-			$this->form_validation->set_rules(
-				'password_old',
-				'password_old',
-				['required', 'trim', 'xss_clean', ['password_callable', function($string){return $this->loginmodel->checkPass(['username' => $this->data['user']['username'], 'password' => $string]); }]],
+			$this->form_validation->set_rules('password_old', 'password_old', ['required', 'trim', 'xss_clean', ['password_callable', function($string){return $this->loginmodel->checkPass(['username' => $this->data['user']['username'], 'password' => $string]); }]],
 				[
 					'required' => 'Nie wprowadziłeś hasła',
 					'password_callable' => 'Nie prawidłowe hasło'
 				]
 			);
-			$this->form_validation->set_rules(
-				'password',
-				'password',
-				'trim|xss_clean|required|min_length[6]',
+			$this->form_validation->set_rules('password', 'password', 'trim|xss_clean|required|min_length[6]',
 				[
 					'required' => 'Nie wprowadziłeś nowego hasła',
 					'min_length' => 'Hasło powinno mieć przynajmniej 6 znaków'
 				]
 			);
-			$this->form_validation->set_rules(
-				'password2',
-				'password2',
-				'trim|xss_clean|matches[password]|required',
+			$this->form_validation->set_rules('password2', 'password2', 'trim|xss_clean|matches[password]|required',
 				[
 					'required' => 'Nie wprowadziłeś nowego hasła ponownie',
 					'matches' => 'Hasła nie są identyczne'
@@ -362,10 +253,7 @@ class Ustawienia extends AC_Controller
 			);
 
 			if ($this->form_validation->run() == false) {
-				$this->session->set_flashdata(
-					'errors',
-					$this->form_validation->error_array()
-				);
+				$this->session->set_flashdata('errors', $this->form_validation->error_array());
 			} else {
 				$user_data_set = [
 					'password' => $this->input->post('password'),
@@ -373,10 +261,7 @@ class Ustawienia extends AC_Controller
 				];
 
 				if ($this->usersmodel->userUpdate($user_data_set)) {
-					$this->session->set_flashdata(
-						'complete',
-						'Poprawnie zmieniono hasło'
-					);
+					$this->session->set_flashdata('complete', 'Poprawnie zmieniono hasło');
 					redirect('/ustawienia/logowanie_ustaw_haslo/', 'location');
 				} else {
 					$this->session->set_flashdata('error', 'Niepowodzenie podczas zmiany hasła');
@@ -385,10 +270,7 @@ class Ustawienia extends AC_Controller
 			}
 		}
 
-		$this->twig->display(
-			'settings/logowanie_ustaw_haslo.html',
-			$this->data
-		);
+		$this->twig->display('settings/logowanie_ustaw_haslo.html', $this->data);
 	}
 
 	function daneosobowe()

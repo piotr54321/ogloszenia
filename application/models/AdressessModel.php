@@ -12,7 +12,7 @@ class AdressessModel extends CI_Model{
 		if(!is_array($dataFind)){
 			return FALSE;
 		}
-		$this->db->select('id_address, id_user, main_address, postal_code, home, street, city');
+		$this->db->select('id_address, id_user, main_address, postal_code, home, street, city, name');
 		$this->db->from('addresses');
 		issetWhere($this->db, $dataFind, 'id_address');
 		issetWhere($this->db, $dataFind, 'id_user');
@@ -21,6 +21,7 @@ class AdressessModel extends CI_Model{
 		issetWhere($this->db, $dataFind, 'home');
 		issetWhere($this->db, $dataFind, 'street');
 		issetWhere($this->db, $dataFind, 'city');
+		issetWhere($this->db, $dataFind, 'name');
 		$query = $this->db->get();
 
 		if($query->num_rows() > 0){
@@ -36,6 +37,7 @@ class AdressessModel extends CI_Model{
 		if($dataUpdate['update']['main_address'] == 1){
 			$this->addressUpdate(['update' => ['main_address' => 0], 'where' => ['id_user' => $dataUpdate['where']['id_user']]]);
 		}
+		issetSet($this->db, $dataUpdate['update'], 'name');
 		issetSet($this->db, $dataUpdate['update'], 'city');
 		issetSet($this->db, $dataUpdate['update'], 'street');
 		issetSet($this->db, $dataUpdate['update'], 'home');
@@ -61,6 +63,7 @@ class AdressessModel extends CI_Model{
 		}
 		issetSet($this->db, $dataInsert['insert'], 'id_user');
 		issetSet($this->db, $dataInsert['insert'], 'city');
+		issetSet($this->db, $dataInsert['insert'], 'name');
 		issetSet($this->db, $dataInsert['insert'], 'street');
 		issetSet($this->db, $dataInsert['insert'], 'home');
 		issetSet($this->db, $dataInsert['insert'], 'postal_code');

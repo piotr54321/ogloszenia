@@ -57,4 +57,29 @@ class WalletModel extends CI_Model{
 			return FALSE;
 		}
 	}
+
+	function walletUpdate(array $dataUpdate){
+		if(!is_numeric($dataUpdate['id_currency']) || !is_numeric($dataUpdate['id_user']) || !is_bool($dataUpdate['operation']) || !is_numeric($dataUpdate['amount']) || $dataUpdate['amount'] <= 0){
+			return FALSE;
+		}
+
+		$this->db->trans_start();
+		if(!$this->walletsFind(['id_user' => $dataUpdate['id_user'], 'id_currency' => $dataUpdate['id_currency']])){
+			if(!$this->walletCreate(['id_user' => $dataUpdate['id_user'], 'id_currency' => $dataUpdate['id_currency']])){
+				return FALSE;
+			}
+		}
+
+		$this->db->set('amount', "amount".(($dataUpdate['operation'] == true) ?  '+' : '-').$dataUpdate['amount']);
+		issetWhere($this->db, $dataUpdate, 'id_user');
+		issetWhere($this->db, $dataUpdate, 'id_currency');
+		$this->db->update('wallet');
+		$this->db->trans_complete();
+
+		if($this->db->trans_status() === FALSE || !$this->db->affected_rows()){
+			return FALSE;
+		}else{
+			return TRUE;
+		}
+	}
 }
