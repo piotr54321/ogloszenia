@@ -15,6 +15,7 @@
 					{% endfor %}
 				</select>
 				{% if errors.id_currency %}<div class="invalid-feedback">{{ errors.id_currency }}</div>{% endif %}
+			</div>
 			<div class="form-group">
 				<label for="amount">Liczba środków</label>
 				<input type="number" min="0" max="10000" step="10" class="form-control{% if errors.amount %} is-invalid{% endif %}" id="amount" name="amount" placeholder="Ilość środków np.: 100" required>

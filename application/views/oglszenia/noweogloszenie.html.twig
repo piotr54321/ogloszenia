@@ -3,5 +3,66 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-	<h1>Nowe ogłoszenie</h1>
+	{% include 'page/alerts.html.twig' %}
+	<div class="container-fluid">
+		<h1>Nowe ogłoszenie</h1>
+		<form method="post" enctype="multipart/form-data">
+			<div class="form-group">
+				<label for="offer_name">Nazwa ogłoszenia</label>
+				<input type="text" class="form-control" id="offer_name" name="offer_name" placeholder="Nazwa ogłoszenia">
+			</div>
+			<div class="form-group">
+				<label for="id_category">Kategoria</label>
+				<select class="form-control" id="id_category" name="id_category">
+					{% for category in categories %}
+						<option value="{{ category.id_category }}">{{category.category_path}}</option>
+					{% endfor %}
+				</select>
+			</div>
+			<div class="form-group">
+				<label for="id_address">Adres dla ogłoszenia</label>
+				<select class="form-control" id="id_address" name="id_address">
+					{% for address in user_adressess %}
+						<option value="{{ address.id_address }}">{{ address.name }}</option>
+					{% endfor %}
+				</select>
+			</div>
+
+			<div class="form-group">
+				<label for="description">Opis ogłoszenia</label>
+				<textarea class="form-control" id="description" name="description" rows="3"></textarea>
+			</div>
+			<div class="form-group">
+				<label for="files">Zdjęcia [jpeg, png]</label>
+				<input type="file" class="form-control-file" id="files" name="files[]" accept="image/png, image/jpeg" multiple>
+			</div>
+			<h4>Pola opcjonalne</h4>
+			<div class="form-group">
+				<label for="negotiation">Do negocjacji?</label>
+				<div class="form-check form-check-inline">
+					<input class="form-check-input" type="radio" name="negotiation" id="negotiation" value="0" checked>
+					<label class="form-check-label" for="negotiation">Nie</label>
+				</div>
+				<div class="form-check form-check-inline">
+					<input class="form-check-input" type="radio" name="negotiation" id="negotiation" value="1">
+					<label class="form-check-label" for="negotiation">Tak</label>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="id_currency">Waluta w ogłoszenia</label>
+				<select id="id_currency" name="id_currency" class="form-control{% if errors.id_currency %} is-invalid{% endif %}">
+					{% for item in available_currencies %}
+						<option value="{{ item.id_currency }}" {% if item.currency_code == 'PLN' %}selected{% endif %}>{{ item.currency_code }} - {{ item.full_name}}</option>
+					{% endfor %}
+				</select>
+				{% if errors.id_currency %}<div class="invalid-feedback">{{ errors.id_currency }}</div>{% endif %}
+			</div>
+			<div class="form-group">
+				<label for="price">Cena</label>
+				<input type="number" min="0" max="9999999999" step="1" class="form-control{% if errors.price %} is-invalid{% endif %}" id="price" name="price" placeholder="Cena np.: 100">
+				{% if errors.amount %}<div class="invalid-feedback">{{ errors.price }}</div>{% endif %}
+			</div>
+			<button type="submit" class="btn btn-primary">Dodaj ogłoszenie</button>
+		</form>
+	</div>
 {% endblock %}

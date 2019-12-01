@@ -7,7 +7,7 @@ function issetWhere($dbInstance, $array, $column, $operator = '='){
 	//return false;
 }
 
-function issetSet($dbInstance, $array, $column){
+function issetSet($dbInstance, $array, $column){ //użycie!!! $this->>db, tablica, nazwa_kolumny
 	if(is_array($array) && array_key_exists($column, $array)) {
 		if (!empty($array[$column]) || is_numeric($array[$column])) $dbInstance->set($column, $array[$column]);
 	}
