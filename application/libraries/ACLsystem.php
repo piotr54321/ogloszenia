@@ -66,7 +66,6 @@ class ACLsystem{
             $this->CI->db->where('link_name', $resource_name);
         }
         $q = $this->CI->db->get();
-        //var_dump($q);
         if($q->num_rows() > 0){
             return $q->result_array();
         }else{
@@ -88,14 +87,18 @@ class ACLsystem{
         }
     }
 
-    public function getAllUserResources($roles_list){
-        //
-        //var_dump($this->getResourceAccessForRanksRoles($roles_list)[0]);
-        $resourcesForRanks = $this->getResourceAccessForRanksRoles($roles_list);
+	/**
+	 * Zwraca listę wszystkich dostępnych zasobów dla użytkownika
+	 * a.) Dostępne zasoby dla grup do których przydzielony jest użytkownik
+	 * b.) Zasoby dla których użytkownik dodatkowo poza grupą otrzymał lub odebrano mu dostęp
+	 * @param $roles_list
+	 * @return array
+	 */
+	public function getAllUserResources($roles_list){
+        $resourcesForRanks = $this->getResourceAccessForRanksRoles($roles_list); // a.)
         $allResourcesNames = array_column($resourcesForRanks, 'link_name');
-        $userResourceAccessList = $this->getUserResourceAccess();
+        $userResourceAccessList = $this->getUserResourceAccess(); // b.)
         if(is_array($userResourceAccessList)){
-            //var_dump(array_column($userResourceAccessList, 'allow'));
             $resourceKeysAllow = array_keys(array_column($userResourceAccessList, 'allow'), '1');
             $resourceKeysDisallow = array_keys(array_column($userResourceAccessList, 'allow'), '0');
             if(count($resourceKeysAllow) > 0){
@@ -103,16 +106,14 @@ class ACLsystem{
                 foreach ($resourceKeysAllow as $key){
                     array_push($array1, $userResourceAccessList[$key]);
                 }
-                $array1names = array_column($array1, 'link_name');
-                $allResourcesNames = array_merge($allResourcesNames, $array1names);
+                $allResourcesNames = array_merge($allResourcesNames, array_column($array1, 'link_name'));
             }
             if(count($resourceKeysDisallow) > 0){
                 $array2 = [];
                 foreach ($resourceKeysDisallow as $key){
                     array_push($array2, $userResourceAccessList[$key]);
                 }
-                $array2names = array_column($array2, 'link_name');
-                $allResourcesNames = array_diff($allResourcesNames, $array2names);
+                $allResourcesNames = array_diff($allResourcesNames, array_column($array2, 'link_name'));
             }
         }
         $this->allResourcesNames = array_unique($allResourcesNames);
@@ -146,12 +147,17 @@ class ACLsystem{
         }
     }
 
-    public function checkResourceAccess($resourceName){ // v2.0
+	/**
+	 * Zwraca prawdę jeżeli użytkownik ma dostęp do określonego zasobu
+	 *
+	 * @param $resourceName
+	 * @return bool
+	 */
+	public function checkResourceAccess($resourceName){
         if(in_array($resourceName, $this->getAllUserResources(array_column($this->getAllUserRanksList(), 'rank')))){
             return true;
         }else{
             return false;
         }
     }
-
 }
