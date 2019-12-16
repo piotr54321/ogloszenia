@@ -22,21 +22,11 @@ class Login extends AC_Controller
 	{
 		$data = array();
 		if ($this->input->post('submit') != null) {
-			$this->form_validation->set_rules(
-				'username',
-				'username',
-				'trim|required|xss_clean',
-				array(
-					'required' => 'Nie wprowadziłeś nazwy użytkownika'
-				)
+			$this->form_validation->set_rules('username', 'username', 'trim|required|xss_clean',
+				['required' => 'Nie wprowadziłeś nazwy użytkownika']
 			);
-			$this->form_validation->set_rules(
-				'password',
-				'password',
-				'trim|required|xss_clean',
-				array(
-					'required' => 'Nie wprowadziłeś hasła'
-				)
+			$this->form_validation->set_rules('password', 'password', 'trim|required|xss_clean',
+				['required' => 'Nie wprowadziłeś hasła']
 			);
 			if (!$this->form_validation->run()) {
 				$data['errors'] = $this->form_validation->error_array();
@@ -46,20 +36,16 @@ class Login extends AC_Controller
 					'password' => $this->input->post('password')
 				];
 				if ($this->loginmodel->checkPass($dataFromForm)) {
-					$data['isgood'] = 'Zalogowano';
+					$data['complete'] = 'Zalogowano';
 					$this->session->set_userdata(
-						$this->loginmodel->sessionUserData(
-							$dataFromForm['username']
-						)
+						$this->loginmodel->sessionUserData($dataFromForm['username'])
 					);
 					redirect('/');
 				} else {
-					$data['errors']['other'] =
-						'Błąd logowania, spróbuj jeszcze raz...';
+					$data['errors']['other'] = 'Błąd logowania, spróbuj jeszcze raz...';
 				}
 			}
 		}
-
 		$this->twig->display('login/index.html', $data);
 	}
 

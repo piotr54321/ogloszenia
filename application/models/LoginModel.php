@@ -14,10 +14,6 @@ class LoginModel extends CI_Model
 		$this->load->database();
 	}
 
-	function xd()
-	{
-	}
-
 	function checkPass($data = array())
 	{
 		$this->db->select('username, password');
@@ -25,10 +21,7 @@ class LoginModel extends CI_Model
 		$this->db->where('username', $data['username']);
 		$q = $this->db->get();
 		if ($q->num_rows() > 0) {
-			return password_verify(
-				$data['password'],
-				$q->result_array()[0]['password']
-			);
+			return password_verify($data['password'], $q->result_array()[0]['password']);
 		} else {
 			return false;
 		}
