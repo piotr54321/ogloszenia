@@ -19,7 +19,7 @@ class Ustawienia extends AC_Controller
 		$this->load->library('twig');
 		$this->load->model('usersmodel');
 		$this->load->model('accessmodel');
-		$this->load->model('adressessmodel');
+		$this->load->model('addressesmodel');
 		$this->load->model('loginmodel');
 		$this->load->library('form_validation');
 		$this->load->helper('security');
@@ -36,7 +36,7 @@ class Ustawienia extends AC_Controller
 
 	function adresy()
 	{
-		$this->data['user_adressess'] = $this->adressessmodel->adressessFind(['id_user' => $this->data['user']['id']]);
+		$this->data['user_adressess'] = $this->addressesmodel->adressesFind(['id_user' => $this->data['user']['id']]);
 		//var_dump($this->data['user_adressess']);
 		$this->twig->display('settings/adresy.html', $this->data);
 	}
@@ -44,7 +44,7 @@ class Ustawienia extends AC_Controller
 	function adres_edytuj($address_id = null)
 	{
 		if (is_numeric($address_id)) {
-			$this->data['address_edited'] = $this->adressessmodel->adressessFind(['id_user' => $this->data['user']['id'], 'id_address' => $address_id])[0];
+			$this->data['address_edited'] = $this->addressesmodel->adressesFind(['id_user' => $this->data['user']['id'], 'id_address' => $address_id])[0];
 		}
 		if (!is_numeric($address_id) || $this->data['address_edited'] == false) {
 			$this->data['error'] = 'Nieprawidłowe ID adresu';
@@ -76,7 +76,7 @@ class Ustawienia extends AC_Controller
 						'id_address' => $this->input->post('addressID')
 					];
 
-					if ($this->adressessmodel->addressUpdate($data_address)) {
+					if ($this->addressesmodel->addressUpdate($data_address)) {
 						$this->session->set_flashdata('complete', 'Poprawnie zmieniono dane adresu');
 						redirect('/ustawienia/adres_edytuj/' . $address_id, 'location');
 					} else {
@@ -139,7 +139,7 @@ class Ustawienia extends AC_Controller
 					'main_address' => $this->input->post('main_address')
 				];
 
-				$addres_insert_status = $this->adressessmodel->addressInsert(
+				$addres_insert_status = $this->addressesmodel->addressInsert(
 					$data_address
 				);
 				if ($addres_insert_status) {
@@ -172,7 +172,7 @@ class Ustawienia extends AC_Controller
 				$data_address['where'] = [
 					'id_user' => $this->data['user']['id']
 				];
-				if ($this->adressessmodel->addressDelete($data_address)) {
+				if ($this->addressesmodel->addressDelete($data_address)) {
 					$this->session->set_flashdata('complete', 'Poprawnie usunięto adres');
 					redirect('/ustawienia/adresy/', 'location');
 				} else {

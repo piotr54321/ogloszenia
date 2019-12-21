@@ -1,6 +1,6 @@
 <?php
 
-class AdressessModel extends CI_Model{
+class AddressesModel extends CI_Model{
 	public function __construct()
 	{
 		parent::__construct();
@@ -8,7 +8,7 @@ class AdressessModel extends CI_Model{
 		$this->load->helper('dbHelp');
 	}
 
-	function adressessFind(array $dataFind){
+	function adressesFind(array $dataFind){
 		if(!is_array($dataFind)){
 			return FALSE;
 		}
