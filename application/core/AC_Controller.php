@@ -31,25 +31,24 @@ class AC_Controller extends CI_Controller{
         }
     }
 
-    function accessToPage(){
+	/**
+	 * 
+	 */
+	function accessToPage(){
         if(!$this->aclsystem->checkResourceAccess($this->classMethod)){
-            //echo $this->classMethod;
             show_404();
         }
     }
 
-    function page_data(){
+	/**
+	 * @return array|false
+	 */
+	function page_data(){
 		$data = [];
 		$user = $this->usermodel->getUser($this->session->user_id);
-		$rangi = $this->aclsystem->getAllUserRanksList;
+		$user_rank = $this->aclsystem->getAllUserRanksList;
 		$data['dostepneStrony'] = array_values($this->aclsystem->allResourcesNames);
-		//var_dump($data['dostepneStrony']);
-		//$uprawnienia = array_column($rangi, 'rank');
-		//var_dump($uprawnienia);
-		/*if(array_flip($this->aclsystem->getAllUserResources($uprawnienia))['login:index']){
-			var_dump("LOGIN");
-		}*/
-		$data['nazwaRangi'] = array_column($rangi, 'rolename')[(array_key_last(array_column($rangi, 'rolename')))];
+		$data['nazwaRangi'] = array_column($user_rank, 'rolename')[(array_key_last(array_column($user_rank, 'rolename')))];
 
 		$data['user'] = $user;
 		return $data;
