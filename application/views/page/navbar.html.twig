@@ -37,6 +37,7 @@
 					<div class="dropdown-menu">
 						{% if 'ogloszenia:index' in dostepneStrony %}<a class="dropdown-item" href="{{ site_url('ogloszenia/index') }}">Moje ogłoszenia</a>{% endif %}
 						{% if 'ogloszenia:noweogloszenie' in dostepneStrony %}<a class="dropdown-item" href="{{ site_url('ogloszenia/noweogloszenie') }}">Dodaj ogłoszenie</a>{% endif %}
+						{% if 'ogloszenia:moderacja_index' in dostepneStrony %}<a class="dropdown-item" href="{{ site_url('ogloszenia/moderacja_index') }}">Moderacja ogłoszeniami</a>{% endif %}
 					</div>
 				</li>
 			{% endif %}
