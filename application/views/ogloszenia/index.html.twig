@@ -1,0 +1,39 @@
+{# views/ogloszenia/index.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block body %}
+	{% include 'page/alerts.html.twig' %}
+	<div class="container-fluid">
+		<h1>Moje ogłoszenia</h1>
+		<style>
+			.center-cropped {
+				object-fit: cover; /* Do not scale the image */
+				object-position: center; /* Center the image within the element */
+				height: 200px;
+				width: 300px;
+			}
+		</style>
+		{% for my_ad in my_ads %}
+				<div class="card mt-2">
+					<div class="row no-gutters">
+						<div class="col-auto">
+							<img src="{{ base_url('uploads/') }}{{ my_ad.main_image }}" class="center-cropped" alt="...">
+						</div>
+						<div class="col ">
+							<div class="card-header">{{my_ad.id_category}}</div>
+							<div class="card-body text-primary">
+								<h5 class="card-title">{{my_ad.offer_name}}</h5>
+								<p class="card-text">{{ my_ad.description }}</p>
+							</div>
+							<div class="card-footer">
+								<a href="{{ base_url('ogloszenia/ad/') }}{{ my_ad.id_offer }}" class="btn btn-primary" role="button">Podgląd ogłoszenia</a>
+								<a href="{{ base_url('ogloszenia/edycja/') }}{{ my_ad.id_offer }}" class="btn btn-dark" role="button">Edycja ogłoszenie</a>
+								<a href="{{ base_url('ogloszenia/statystyki/') }}{{ my_ad.id_offer }}" class="btn btn-dark" role="button">Statystyki ogłoszenia</a>
+							</div>
+						</div>
+					</div>
+				</div>
+		{% endfor %}
+	</div>
+{% endblock %}

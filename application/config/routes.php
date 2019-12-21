@@ -53,5 +53,8 @@ $route['default_controller'] = 'home';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 
+//Routes
+$route['ad/(:num)'] = 'ogloszenia/ad/$1';
+
 //Api Routes
 

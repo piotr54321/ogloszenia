@@ -30,12 +30,13 @@ class CategoriesModel extends CI_Model{
 		if(!is_array($dataFind)){
 			return FALSE;
 		}
-		$this->db->select("categories.id_category, categories.category_name, categories.category_parent, categories.enable, (SELECT GROUP_CONCAT(parent.category_name ORDER BY parent.lft SEPARATOR ', ') as path FROM categories AS node, categories AS parent WHERE node.lft BETWEEN parent.lft AND parent.rgt AND node.id_category = categories.id_category ORDER BY parent.lft) as category_path");
+		$this->db->select("categories.id_category, categories.category_name, categories.category_parent, categories.enable, categories.paid, (SELECT GROUP_CONCAT(parent.category_name ORDER BY parent.lft SEPARATOR '/') as path FROM categories AS node, categories AS parent WHERE node.lft BETWEEN parent.lft AND parent.rgt AND node.id_category = categories.id_category ORDER BY parent.lft) as category_path");
 		$this->db->from('categories');
 		issetWhere($this->db, $dataFind, 'categories.id_category');
 		issetWhere($this->db, $dataFind, 'categories.category_name');
 		issetWhere($this->db, $dataFind, 'categories.category_parent');
 		issetWhere($this->db, $dataFind, 'categories.enable');
+		issetWhere($this->db, $dataFind, 'categories.paid');
 		$query = $this->db->get();
 		if($query->num_rows() > 0){
 			return $query->result_array();

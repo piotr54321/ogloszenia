@@ -9,7 +9,7 @@
 class Ogloszenia extends AC_Controller
 {
 	/**
-	 * @var array
+	 * @var array|false
 	 */
 	private $data;
 
@@ -18,7 +18,7 @@ class Ogloszenia extends AC_Controller
         parent::__construct();
         $this->load->library('twig');
         $this->load->model('categoriesmodel');
-        $this->load->model('adressessmodel');
+        $this->load->model('addressesmodel');
 		$this->load->model('walletmodel');
         $this->load->model('adsmodel');
 		$this->load->library('form_validation');
@@ -36,14 +36,16 @@ class Ogloszenia extends AC_Controller
 
     function index(){
     	//TODO
-		$this->twig->display('oglszenia/index.html', $this->data);
+		$this->data['my_ads'] = $this->adsmodel->adsFind(['id_user' => $this->data['user']['id']]);
+		var_dump($this->data['my_ads']);
+		$this->twig->display('ogloszenia/index.html', $this->data);
     }
 
     function noweogloszenie(){
 
     	//TODO
 		//TODO jeżeli nie ma środków to
-		$this->data['user_adressess'] = $this->adressessmodel->adressessFind(['id_user' => $this->data['user']['id']]);
+		$this->data['user_adressess'] = $this->addressesmodel->adressesFind(['id_user' => $this->data['user']['id']]);
 		$this->data['available_currencies'] = $this->walletmodel->currenciesFind(['enabled' => 1]);
 		//var_dump($this->input->post());
 		//var_dump($_FILES);
@@ -92,19 +94,18 @@ class Ogloszenia extends AC_Controller
 					$this->upload_files($dataOffer);
 				}
 				$this->db->trans_complete();
-				if($this->db->trans_status() === FALSE){
+				if($this->db->trans_status() !== FALSE){
 					$this->session->set_flashdata('complete', 'Poprawnie dodano ogłoszenie. Oczekuje ono na akceptację administratora.');
 					redirect('/ogloszenia/noweogloszenie/', 'location');
 				}else{
 					$this->session->set_flashdata('error', 'Niepowodzenie');
 					redirect('/ogloszenia/noweogloszenie/', 'location');
 				}
-
 			}
 		}
 
 		$this->data['categories'] = $this->categoriesmodel->categoryFind(['categories.enable' => 1]);
-		$this->twig->display('oglszenia/noweogloszenie.html', $this->data);
+		$this->twig->display('ogloszenia/noweogloszenie.html', $this->data);
     }
 
     function upload_files(array $dataOffer){
@@ -138,7 +139,7 @@ class Ogloszenia extends AC_Controller
 
 				$this->load->library('upload', $config);
 
-				var_dump($config['file_name']);
+				//var_dump($config['file_name']);
 				if ($this->upload->do_upload('file')) {
 					$uploadData = $this->upload->data();
 					$filename = $uploadData['file_name'];
@@ -146,6 +147,121 @@ class Ogloszenia extends AC_Controller
 					$this->adsmodel->imageInsert($imageInsert);
 				}
 			}
+		}
+	}
+
+	function ad(int $adId){
+		if(!is_numeric($adId)){
+			$this->data['error'] = 'Nie podano ID ogłoszenia...';
+		}else{
+			$this->data['ad'] = $this->adsmodel->adsFind(['id_offer' => $adId])[0];
+			if($this->data['ad'] != FALSE) {
+				if($this->data['ad']['accept'] == 0 && @$this->data['user']['id'] != $this->data['ad']['id_user'] && in_array('ogloszenia:moderacja_ogloszeniami', $this->data['dostepneStrony'])){ //Ogłoszenie niezakceptowane -> moderator musi je zaakceptować //TODO coś innego zamiast @
+					$this->data['error'] = 'To ogłoszenie nie zostało jeszcze zaakceptowane...';
+				}elseif($this->data['ad']['accept'] == 1 || $this->data['user']['id'] == $this->data['ad']['id_user']){
+					$this->data['ad_currency'] = $this->walletmodel->currenciesFind(['id_currency' => $this->data['ad']['id_currency']]);
+					$this->data['ad_images'] = $this->adsmodel->imagesFind(['id_offer' => $this->data['ad']['id_offer']]);
+					$this->data['ad_address'] = $this->addressesmodel->adressesFind(['id_address' => $this->data['ad']['id_address']]);
+					$this->data['ad_category'] = $this->categoriesmodel->categoryFind(['categories.id_category' => $this->data['ad']['id_category']])[0];
+					$this->data['ad_observed'] = $this->adsmodel->observedFind(['id_user' => $this->data['user']['id'], 'id_offer' => $adId]);
+					$this->adsmodel->addView($adId);
+				}else{
+					$this->data['error'] = 'Ogłoszenie usunięte ...';
+				}
+			}else{
+				$this->data['error'] = 'Brak takiego ogłoszenia...';
+			}
+		}
+		$this->twig->display('ogloszenia/ad.html', $this->data);
+	}
+
+	function moderacja_index(){
+
+		$this->data['moderation_ads'] = $this->adsmodel->adsFind(['accept' => 0]);
+		$this->twig->display('ogloszenia/moderacja/index.html', $this->data);
+	}
+
+	function moderacja_akceptuj(int $adId){
+		if(!is_numeric($adId)){
+			$this->data['error'] = 'Nie podano ID ogłoszenia...';
+		}else{
+
+			$dataUpdate = [
+				'where' => [
+					'id_offer' => $adId
+				],
+				'update' => [
+					'accept' => 1
+				]
+			];
+			$statusUpdate = $this->adsmodel->adUpdate($dataUpdate);
+			if(!$statusUpdate){
+				$this->session->set_flashdata('error', 'Ogłoszenie nie zostało zaakceptowane');
+				redirect('/ogloszenia/moderacja_index/', 'location');
+			}else{
+				$this->session->set_flashdata('complete', 'Poprawnie zaakceptowano ogłoszenie.');
+				redirect('/ogloszenia/moderacja_index/', 'location');
+			}
+		}
+	}
+
+	function moderacja_anuluj(int $adId){
+		if(!is_numeric($adId)){
+			$this->data['error'] = 'Nie podano ID ogłoszenia...';
+		}else{
+
+			$dataUpdate = [
+				'where' => [
+					'id_offer' => $adId
+				],
+				'update' => [
+					'accept' => 2
+				]
+			];
+
+			$statusUpdate = $this->adsmodel->adUpdate($dataUpdate);
+			if(!$statusUpdate){
+				$this->session->set_flashdata('error', 'Ogłoszenie nie zostało anulowane');
+				redirect('/ogloszenia/moderacja_index/', 'location');
+			}else{
+				$this->session->set_flashdata('complete', 'Poprawnie anulowano ogłoszenie.');
+				redirect('/ogloszenia/moderacja_index/', 'location');
+			}
+		}
+	}
+
+	function obserwuj(int $adId){
+		if(!is_numeric($adId)){
+			$this->data['error'] = 'Nie podano ID ogłoszenia...';
+		}else{
+			$dataUpdate = [
+				'where' => [
+					'id_offer' => $adId,
+					'id_user' => $this->data['user']['id'],
+				],
+				'update' => [
+					'id_offer' => $adId,
+					'id_user' => $this->data['user']['id'],
+				]
+			];
+
+			$result = $this->adsmodel->observedUpdate($dataUpdate);
+			if($result){
+				$this->session->set_flashdata('success', 'Ogłoszenie nie zostało anulowane');
+				redirect('/ogloszenia/ad/'.$adId, 'location');
+			}else{
+				$this->session->set_flashdata('success', 'Poprawnie anulowano ogłoszenie.');
+				redirect('/ogloszenia/ad/'.$adId, 'location');
+			}
+		}
+	}
+
+	function statystyki(int $adId){
+		if(!is_numeric($adId)){
+			$this->data['error'] = 'Nie podano ID ogłoszenia...';
+		}else{
+
+			$this->twig->display('ogloszenia/statystyki.html', $this->data);
 		}
 	}
 }

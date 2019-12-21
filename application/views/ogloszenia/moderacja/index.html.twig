@@ -1,0 +1,48 @@
+{# views/ogloszenia/moderacja/index.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block body %}
+	{% include 'page/alerts.html.twig' %}
+	<div class="container-fluid">
+		<h1>Moderacja ogłoszeniami</h1>
+		<style>
+			.center-cropped {
+				object-fit: cover; /* Do not scale the image */
+				object-position: center; /* Center the image within the element */
+				height: 200px;
+				width: 300px;
+			}
+		</style>
+		{% if moderation_ads == false %}
+			<div class="alert alert-info" role="alert">
+				Na ten moment brak ogłoszeń które mogłyby być zaakceptowane
+			</div>
+		{% else %}
+			{% for moderation_ad in moderation_ads %}
+				<div class="card mt-2">
+					<div class="row no-gutters">
+						<div class="col-auto">
+							<img src="{{ base_url('uploads/') }}{{ moderation_ad.main_image }}" class="center-cropped" alt="...">
+						</div>
+						<div class="col ">
+							<div class="card-header">{{moderation_ad.id_category}}</div>
+							<div class="card-body text-primary">
+								<h5 class="card-title">{{moderation_ad.offer_name}}</h5>
+								<p class="card-text">{{ moderation_ad.description }}</p>
+							</div>
+							<div class="card-footer">
+								<a href="{{ base_url('ogloszenia/ad/') }}{{ moderation_ad.id_offer }}" class="btn btn-primary" role="button">Podgląd ogłoszenia</a>
+
+								<a href="#" class="btn btn-dark" role="button">Edycja ogłoszenie</a>
+								{% if 'ogloszenia:moderacja_akceptuj' in dostepneStrony and ad.accept == 0 %}<a href="{{ base_url('ogloszenia/moderacja_akceptuj/') }}{{ moderation_ad.id_offer }}" class="btn btn-dark" role="button">Akceptuj ogłoszenie</a>{% endif %}
+							</div>
+						</div>
+					</div>
+				</div>
+			{% endfor %}
+		{% endif %}
+		<hr/>
+
+	</div>
+{% endblock %}
