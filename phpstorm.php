@@ -72,8 +72,10 @@ die('This file is used for development purposes only.');
  * @property LoginModel          $loginmodel                          Login Model
  * @property ACLsystem           $aclsystem                           ACL system
  * @property WalletModel         $walletmodel                         Wallet Model
- * @property AdressessModel      $adressessmodel                      Adressess Model
+ * @property AddressesModel      $addressesmodel                      Addresses Model
  * @property Paypal_lib          $paypal_lib                          Paypal lib
+ * @property AdsModel            $adsmodel                            Ads model
+ * @property CategoriesModel     $categoriesmodel                     Categories model
  */
 class CI_Controller {
 
@@ -135,6 +137,8 @@ class CI_Controller {
  * @property WalletModel         $walletmodel                         Wallet Model
  * @property AdressessModel      $adressessmodel                      Adressess Model
  * @property Paypal_lib          $paypal_lib                          Paypal lib
+ * @property AdsModel            $adsmodel                            Ads model
+ * @property CategoriesModel     $categoriesmodel                     Categories model
  */
 class CI_Model {
 
@@ -196,6 +200,8 @@ class CI_Model {
  * @property WalletModel         $walletmodel                         Wallet Model
  * @property AdressessModel      $adressessmodel                      Adressess Model
  * @property Paypal_lib          $paypal_lib                          Paypal lib
+ * @property AdsModel            $adsmodel                            Ads model
+ * @property CategoriesModel     $categoriesmodel                     Categories model
  */
 class MX_Controller {
 
