@@ -40,4 +40,19 @@ class LoginModel extends CI_Model
 			return false;
 		}
 	}
+
+	function addLoginHistory(int $userID)
+    {
+		$ip = $_SERVER['HTTP_CLIENT_IP'] ? $_SERVER['HTTP_CLIENT_IP'] : ($_SERVER['HTTP_X_FORWARDED_FOR'] ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR']);
+
+    	$this->db->set('id_user', $userID);
+    	$this->db->set('address_ip', $ip);
+    	$this->db->set('device', $_SERVER['HTTP_USER_AGENT']);
+    	$this->db->insert('login_history');
+    	if($this->db->affected_rows() > 0){
+    		return true;
+		}else{
+    		return false;
+		}
+    }
 }

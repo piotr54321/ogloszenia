@@ -1,0 +1,38 @@
+{# views/historia/logowanie.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block body %}
+	{% include 'page/alerts.html.twig' %}
+	<div class="container-fluid">
+		<h1>Historia logowania</h1>
+		{% if historia_logowania == false %}
+			<div class="alert alert-info" role="alert">
+				Brak historii
+			</div>
+		{% else %}
+			<div class="table-responsive">
+				<table class="table">
+					<thead class="thead-dark">
+					<tr>
+						<th scope="col">#</th>
+						<th scope="col">Czas</th>
+						<th scope="col">Adres IP</th>
+						<th scope="col">Urządzenie</th>
+					</tr>
+					</thead>
+					<tbody>
+					{% for item in historia_logowania %}
+						<tr>
+							<td scope="row">{{ loop.index }}</td>
+							<td>{{ item.login_time }}</td>
+							<td>{{ item.address_ip }}</td>
+							<td>{{ item.device }}</td>
+						</tr>
+					{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		{% endif %}
+	</div>
+{% endblock %}

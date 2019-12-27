@@ -21,6 +21,7 @@ class Ustawienia extends AC_Controller
 		$this->load->model('accessmodel');
 		$this->load->model('addressesmodel');
 		$this->load->model('loginmodel');
+		$this->load->model('historymodel');
 		$this->load->library('form_validation');
 		$this->load->helper('security');
 		if (!isset($data)) {
@@ -277,5 +278,10 @@ class Ustawienia extends AC_Controller
 	{
 		//TODO
 		$this->twig->display('settings/daneosobowe.html', $this->data);
+	}
+	function historia_logowania(){
+
+		$this->data['historia_logowania'] = $this->historymodel->logowanie(['id_user' => $this->data['user']['id']]);
+		$this->twig->display('historia/logowanie.html', $this->data);
 	}
 }
