@@ -2,65 +2,96 @@
 
 {% extends 'base.html.twig' %}
 
-{% block jsscripts %}
-	<script src="https://unpkg.com/react@16/umd/react.production.min.js" crossorigin></script>
-	<script src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js" crossorigin></script>
-{% endblock %}
 
 {% block body %}
 	{% include 'page/alerts.html.twig' %}
 	<div class="container-fluid">
 
-		{% if not error %}
-		<h1>Ogłoszenie</h1>
-			<style>
-				.center-cropped {
-					object-fit: cover; /* Do not scale the image */
-					object-position: center; /* Center the image within the element */
-					height: 400px;
-				}
-			</style>
+		{% if  errorSTARE %}
+			<h1>Ogłoszenie - {{ ad.offer_name }}</h1>
 			<div class="row">
-				<div class="col-8">
-				<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-					<ol class="carousel-indicators">
-						{% for ad_image in ad_images %}
-							<li data-target="#carouselExampleIndicators" data-slide-to="{{ loop.index0 }}" {% if loop.first %} class="active"{% endif %}></li>
-						{% endfor %}
-					</ol>
-					<div class="carousel-inner">
-						{% for ad_image in ad_images %}
-							<div class="carousel-item {% if loop.first %}active{% endif %} center-cropped">
-								<div class="container">
-									<img class="d-block w-100" src="{{ base_url('uploads/') }}{{ ad_image.filename }}" alt="First slide">
-									<div class="carousel-caption d-none d-md-block">
-										<a class="btn btn-primary" target="_blank" rel="noopener noreferrer" href="{{ base_url('uploads/') }}{{ ad_image.filename }}" role="button">Zobacz zdjęcie w nowej karcie</a>
+				<div class="col-md-8 col-12">
+					<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+						<ol class="carousel-indicators">
+							{% for ad_image in ad_images %}
+								<li data-target="#carouselExampleIndicators"
+									data-slide-to="{{ loop.index0 }}" {% if loop.first %} class="active"{% endif %}></li>
+							{% endfor %}
+						</ol>
+						<div class="carousel-inner">
+							{% for ad_image in ad_images %}
+								<div class="carousel-item {% if loop.first %}active{% endif %} center-cropped">
+									<div class="container">
+										<img class="d-block w-100"
+											 src="{{ base_url('uploads/') }}{{ ad_image.filename }}" alt="First slide">
+										<div class="carousel-caption d-none d-md-block">
+											<a class="btn btn-primary" target="_blank" rel="noopener noreferrer"
+											   href="{{ base_url('uploads/') }}{{ ad_image.filename }}" role="button">Zobacz
+												zdjęcie w nowej karcie</a>
+										</div>
 									</div>
 								</div>
-							</div>
-						{% endfor %}
+							{% endfor %}
+						</div>
+						<a class="carousel-control-prev" href="#carouselExampleIndicators" role="button"
+						   data-slide="prev">
+							<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+							<span class="sr-only">Previous</span>
+						</a>
+						<a class="carousel-control-next" href="#carouselExampleIndicators" role="button"
+						   data-slide="next">
+							<span class="carousel-control-next-icon" aria-hidden="true"></span>
+							<span class="sr-only">Next</span>
+						</a>
 					</div>
-					<a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-						<span class="carousel-control-prev-icon" aria-hidden="true"></span>
-						<span class="sr-only">Previous</span>
-					</a>
-					<a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-						<span class="carousel-control-next-icon" aria-hidden="true"></span>
-						<span class="sr-only">Next</span>
-					</a>
 				</div>
-				</div>
-				<div class="col-4">
+				<div class="col-md-4 col-12">
 					<div class="card">
 						<div class="card-header">
-							Kategoria <b>{{ad_category.category_path}}</b>
+							Kategoria <b>{{ ad_category.category_path }}</b>
 						</div>
 						<div class="card-body">
-							<h5 class="card-title">{{ad.offer_name}}</h5>
+							<h5 class="card-title">{{ ad.offer_name }}</h5>
 							<p class="card-text">{{ ad.description }}</p>
 							<p class="card-text">Chcesz porozmawiać z osobą która wystawiła ogłoszenie?</p>
 							{% if user %}
-								<a href="#" class="btn btn-primary">Rozpocznij czat</a>
+								<button type="button" class="btn btn-primary" data-toggle="modal"
+										data-target="#chatModal">
+									Wyślij wiadomość
+								</button>
+
+								<div class="modal fade" id="chatModal" tabindex="-1" role="dialog"
+									 aria-labelledby="chatModal" aria-hidden="true">
+									<div class="modal-dialog" role="document">
+										<div class="modal-content">
+											<div class="modal-header">
+												<h5 class="modal-title" id="chatModal">Wyślij wiadomość na
+													ogłoszenie</h5>
+												<button type="button" class="close" data-dismiss="modal"
+														aria-label="Close">
+													<span aria-hidden="true">&times;</span>
+												</button>
+											</div>
+											<div class="modal-body">
+												<form method="post">
+													<div class="form-group">
+														<label for="message-text" class="col-form-label">Treść
+															wiadomości</label>
+														<textarea rows="4" class="form-control"
+																  id="message-text"></textarea>
+													</div>
+												</form>
+											</div>
+											<div class="modal-footer">
+												<button type="button" class="btn btn-secondary" data-dismiss="modal">
+													Zamknij okno
+												</button>
+												<button type="button" class="btn btn-primary">Wyślij</button>
+											</div>
+										</div>
+									</div>
+								</div>
+
 							{% else %}
 								<a href="#" class="btn btn-primary">Zaloguj się</a>
 							{% endif %}
@@ -72,11 +103,123 @@
 				</div>
 			</div>
 		{% endif %}
+		{% if not error %}
+			<div class="card">
+				<div class="row">
+					<aside class="col-12 col-md-7 border-right">
+						<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+							<ol class="carousel-indicators">
+								{% for ad_image in ad_images %}
+									<li data-target="#carouselExampleIndicators"
+										data-slide-to="{{ loop.index0 }}" {% if loop.first %} class="active"{% endif %}></li>
+								{% endfor %}
+							</ol>
+							<div class="carousel-inner">
+								{% for ad_image in ad_images %}
+									<div class="carousel-item {% if loop.first %}active{% endif %} center-cropped">
+										<div class="container">
+											<img class="d-block w-100"
+												 src="{{ base_url('uploads/') }}{{ ad_image.filename }}"
+												 alt="First slide">
+											<div class="carousel-caption d-none d-md-block">
+												<a class="btn btn-primary" target="_blank" rel="noopener noreferrer"
+												   href="{{ base_url('uploads/') }}{{ ad_image.filename }}"
+												   role="button">Zobacz zdjęcie w nowej karcie</a>
+											</div>
+										</div>
+									</div>
+								{% endfor %}
+							</div>
+							<a class="carousel-control-prev" href="#carouselExampleIndicators" role="button"
+							   data-slide="prev">
+								<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+								<span class="sr-only">Previous</span>
+							</a>
+							<a class="carousel-control-next" href="#carouselExampleIndicators" role="button"
+							   data-slide="next">
+								<span class="carousel-control-next-icon" aria-hidden="true"></span>
+								<span class="sr-only">Next</span>
+							</a>
+						</div>
+					</aside>
+					<aside class="col-12 col-md-5">
+						<article class="card-body p-5">
+							<h3 class="title mb-3">{{ ad.offer_name }}</h3>
+							{% if ad.price %}
+								<p class="price-detail-wrap">
+									<span class="price h3 text-warning">
+										<span class="num">{{ ad.price }}</span><span class="currency">{{ ad_currency.currency_code }}</span>
+									</span>
+								</p>
+							{% endif %}
+							<dl class="item-property">
+								<dt>Opis</dt>
+								<dd><p>{{ ad.description }}</p></dd>
+							</dl>
+							<dl class="param param-feature">
+								<dt>Kategoria</dt>
+								<dd>#{{ ad_category.category_path }}</dd>
+							</dl>
+							<dl class="param param-feature">
+								<dt>Adres</dt>
+								<dd>{% if ad_address.city %}{{ ad_address.city }}{% endif %}{% if ad_address.street %} - ul. {{ ad_address.street }}{% endif %}{% if ad_address.home %} - Nr. {{ ad_address.home }}{% endif %}</dd>
+								{% if ad_address.postal_code %}<dd>Kod pocztowy: {{ ad_address.postal_code }}</dd>{% endif %}
+							</dl>
+							<hr>
+							<p class="card-text">Chcesz porozmawiać z osobą która wystawiła ogłoszenie?</p>
+							{% if user %}
+								<button type="button" class="btn btn-lg btn-primary" data-toggle="modal"
+										data-target="#chatModal">
+									Wyślij wiadomość
+								</button>
+
+								<div class="modal fade" id="chatModal" tabindex="-1" role="dialog"
+									 aria-labelledby="chatModal" aria-hidden="true">
+									<div class="modal-dialog" role="document">
+										<div class="modal-content">
+											<div class="modal-header">
+												<h5 class="modal-title" id="chatModal">Wyślij wiadomość na
+													ogłoszenie</h5>
+												<button type="button" class="close" data-dismiss="modal"
+														aria-label="Close">
+													<span aria-hidden="true">&times;</span>
+												</button>
+											</div>
+											<div class="modal-body">
+												<form method="post">
+													<div class="form-group">
+														<label for="message-text" class="col-form-label">Treść
+															wiadomości</label>
+														<textarea rows="4" class="form-control"
+																  id="message-text"></textarea>
+													</div>
+												</form>
+											</div>
+											<div class="modal-footer">
+												<button type="button" class="btn btn-secondary" data-dismiss="modal">
+													Zamknij okno
+												</button>
+												<button type="button" class="btn btn-primary">Wyślij</button>
+											</div>
+										</div>
+									</div>
+								</div>
+
+							{% else %}
+								<a href="#" class="btn btn-lg btn-primary">Zaloguj się</a>
+							{% endif %}
+							{% if 'ogloszenia:moderacja_akceptuj' in dostepneStrony and ad.accept == 0 %}<a class="btn btn-lg btn-primary" href="{{ base_url('ogloszenia/moderacja_akceptuj/') }}{{ ad.id_offer }}">Akceptuj ogłoszenie</a>{% endif %}
+							{% if 'ogloszenia:moderacja_anuluj' in dostepneStrony and ad.accept == 1 %}<a class="btn btn-lg btn-primary" href="{{ base_url('ogloszenia/moderacja_anuluj/') }}{{ ad.id_offer }}">Anuluj ogłoszenie</a>{% endif %}
+							{% if 'ogloszenia:obserwuj' in dostepneStrony and ad.accept == 1 %}<a class="btn btn-lg btn-primary" href="{{ base_url('ogloszenia/obserwuj/') }}{{ ad.id_offer }}">{% if ad_observed %}Usuń z obserwowanych{% else %}Obserwuj ogłoszenie{% endif %}</a>{% endif %}
+
+						</article>
+					</aside>
+				</div>
+			</div>
+		{% endif %}
 		<hr/>
 		{% if 'ogloszenia:moderacja_akceptuj' in dostepneStrony %}
-			<h5>
-				Moderator:
-			</h5>
+			<h5>Moderator:</h5>
 			<a href="{{ base_url('ogloszenia/moderacja_index/') }}" role="button" class="btn btn-primary btn-sm">Niezaakceptowane ogłoszenia <i class="fas fa-universal-access"></i></a>
 		{% endif %}
 	</div>

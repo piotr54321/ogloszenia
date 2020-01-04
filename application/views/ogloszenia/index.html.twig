@@ -5,25 +5,26 @@
 {% block body %}
 	{% include 'page/alerts.html.twig' %}
 	<div class="container-fluid">
-		<h1>Moje ogłoszenia</h1>
+		<h1>Twoje ogłoszenia</h1>
 		<style>
 			.center-cropped {
-				object-fit: cover; /* Do not scale the image */
-				object-position: center; /* Center the image within the element */
-				height: 200px;
-				width: 300px;
+				width: 350px;
+				height: 250px;
+				overflow: hidden;
+				margin: auto;
+				display: block;
 			}
 		</style>
-		{% for my_ad in my_ads %}
+		{% for my_ad in my_adsSTARE %}
 				<div class="card mt-2">
-					<div class="row no-gutters">
-						<div class="col-auto">
-							<img src="{{ base_url('uploads/') }}{{ my_ad.main_image }}" class="center-cropped" alt="...">
+					<div class="row">
+						<div class="col-3">
+							<img src="{{ base_url('uploads/') }}{{ my_ad.main_image }}" class="center-cropped" alt="Obrazek ogłoszenia">
 						</div>
-						<div class="col ">
-							<div class="card-header">{{my_ad.id_category}}</div>
+						<div class="col-9">
+							<div class="card-header"><h2>{{my_ad.offer_name}}</h2></div>
 							<div class="card-body text-primary">
-								<h5 class="card-title">{{my_ad.offer_name}}</h5>
+								<h5 class="card-title">{{my_ad.id_category}}</h5>
 								<p class="card-text">{{ my_ad.description }}</p>
 							</div>
 							<div class="card-footer">
@@ -34,6 +35,27 @@
 						</div>
 					</div>
 				</div>
+		{% endfor %}
+		{% for my_ad in my_ads %}
+			<div class="blog-card{% if loop.index/2 == 1 %} alt{% endif %}">
+				<div class="meta">
+					<div class="photo" style="background-image: url({{ base_url('uploads/') }}{{ my_ad.main_image }})"></div>
+					<ul class="details">
+						<li class="author"><a href="#">Ty</a></li>
+						<li class="date">{{ my_ad.create_time }}</li>
+						<li class="tags"><a href="{{ base_url('ogloszenia/edycja/') }}{{ my_ad.id_offer }}">Edytuj ogłoszenie</a></li>
+						<li class="tags"><a href="{{ base_url('ogloszenia/statystyki/') }}{{ my_ad.id_offer }}">Statystyki ogłoszenia</a></li>
+					</ul>
+				</div>
+				<div class="description">
+					<h1>{{my_ad.offer_name}}</h1>
+					<h2>{{my_ad.category_path}}</h2>
+					<p> {{ my_ad.description }}</p>
+					<p class="read-more">
+						<a role="button" href="{{ base_url('ogloszenia/ad/') }}{{ my_ad.id_offer }}">Podgląd ogłoszenia</a>
+					</p>
+				</div>
+			</div>
 		{% endfor %}
 	</div>
 {% endblock %}

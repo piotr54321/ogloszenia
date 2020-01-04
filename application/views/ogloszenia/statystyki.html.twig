@@ -1,14 +1,85 @@
-{# views/ogloszenia/index.html.twig #}
+{# views/ogloszenia/statystyki.html.twig #}
 
 {% extends 'base.html.twig' %}
+
+{% block js_scripts %}
+	<script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+	<script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+	<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+	<script src="https://unpkg.com/axios@0.19.0/dist/axios.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+{% endblock %}
 
 {% block body %}
 	{% include 'page/alerts.html.twig' %}
 	<div class="container-fluid">
-		<h1>Statystyki ogłoszenia</h1>
-		<h3>Nazwa</h3>
+		<div class="row">
+			<div class="col-4">
+				<h1>Statystyki ogłoszenia</h1>
+				<ul class="list-group list-group-flush">
+					<li class="list-group-item">Ilość osób obserwujących ogłoszenie: {{ ilosc_obserwacji }}</li>
+					<li class="list-group-item">Ilość osób które odpowiedziały na ogłoszenie: {{ ilosc_odpowiedzi }}</li>
+					<li class="list-group-item">Ilość osób które odwiedziły stronę z ogłoszeniem: {{ ilosc_wyswietlen }}</li>
+				</ul>
+			</div>
+			<div class="col-8">
+				<h1>Wykres odwiedzin na dany dzień</h1>
+				<h5>Ostatnie 14 dni</h5>
+				<div id="root"></div>
+			</div>
+			<script type="text/babel">
+				class Chart extends React.Component {
+					constructor(props) {
+						super(props);
+						this.state = {
+								chart_data: [],
+								loading: true,
+						};
+					}
 
+					componentDidMount() {
+						fetch('{{ base_url('ogloszenia/dane_wykresu') }}/{{ id_offer }}')
+								.then(res => res.json())
+								.then(json => this.setState({chart_data: json, loading: false}));
+					}
 
-		WYKRES
+					render() {
+						var options = {
+							series: [{
+								name: 'Ilość odwiedzin',
+								type: 'column',
+								data: this.state.chart_data.y
+							}],
+							chart: {
+								height: 350
+							},
+							stroke: {
+								width: [0, 4]
+							},
+							labels: this.state.chart_data.x,
+							yaxis: [{
+								title: {
+									text: 'Ilość odwiedzin',
+								},
+								min: 0
+							}]
+						};
+						var chart = new ApexCharts(document.querySelector("#chart"), options);
+						chart.render();
+
+						return (
+								<div id="chart"></div>
+						);
+					}
+				}
+
+				ReactDOM.render(
+						<Chart/>,
+						document.getElementById('root')
+				);
+
+			</script>
+		</div>
+		<hr/>
 	</div>
 {% endblock %}

@@ -235,4 +235,36 @@ class AdsModel extends CI_Model{
 		}
 	}
 
+	function countResponses(int $adId) : int{
+		$this->db->select('*');
+		$this->db->from('msgs');
+		$this->db->where('id_offer', $adId);
+		$this->db->group_by('id_user');
+
+		$query = $this->db->get();
+		if($query->num_rows() > 0){
+			return count($query->result_array());
+		}else{
+			return 0;
+		}
+	}
+
+	function chartData($adId){
+		$this->db->select('date as x, counter as y');
+		$this->db->from('visited');
+		$this->db->where('id_offer', $adId);
+		$this->db->order_by('date', 'DESC');
+		$this->db->limit(14);
+
+		$query = $this->db->get();
+		if($query->num_rows() > 0){
+			$result = $query->result_array();
+			$data =[];
+			$data['x'] = array_column($result, 'x');
+			$data['y'] = array_column($result, 'y');
+			return $data;
+		}else{
+			return false;
+		}
+	}
 }

@@ -37,7 +37,7 @@ class Ogloszenia extends AC_Controller
     function index(){
     	//TODO
 		$this->data['my_ads'] = $this->adsmodel->adsFind(['id_user' => $this->data['user']['id']]);
-		var_dump($this->data['my_ads']);
+		//var_dump($this->data['my_ads']);
 		$this->twig->display('ogloszenia/index.html', $this->data);
     }
 
@@ -159,11 +159,12 @@ class Ogloszenia extends AC_Controller
 				if($this->data['ad']['accept'] == 0 && @$this->data['user']['id'] != $this->data['ad']['id_user'] && in_array('ogloszenia:moderacja_ogloszeniami', $this->data['dostepneStrony'])){ //Ogłoszenie niezakceptowane -> moderator musi je zaakceptować //TODO coś innego zamiast @
 					$this->data['error'] = 'To ogłoszenie nie zostało jeszcze zaakceptowane...';
 				}elseif($this->data['ad']['accept'] == 1 || $this->data['user']['id'] == $this->data['ad']['id_user']){
-					$this->data['ad_currency'] = $this->walletmodel->currenciesFind(['id_currency' => $this->data['ad']['id_currency']]);
+					$this->data['ad_currency'] = $this->walletmodel->currenciesFind(['id_currency' => $this->data['ad']['id_currency']])[0];
 					$this->data['ad_images'] = $this->adsmodel->imagesFind(['id_offer' => $this->data['ad']['id_offer']]);
-					$this->data['ad_address'] = $this->addressesmodel->adressesFind(['id_address' => $this->data['ad']['id_address']]);
+					$this->data['ad_address'] = $this->addressesmodel->adressesFind(['id_address' => $this->data['ad']['id_address']])[0];
 					$this->data['ad_category'] = $this->categoriesmodel->categoryFind(['categories.id_category' => $this->data['ad']['id_category']])[0];
-					$this->data['ad_observed'] = $this->adsmodel->observedFind(['id_user' => $this->data['user']['id'], 'id_offer' => $adId]);
+					@$this->data['ad_observed'] = $this->adsmodel->observedFind(['id_user' => $this->data['user']['id'], 'id_offer' => $adId])[0];
+					Kint::dump($this->data);
 					$this->adsmodel->addView($adId);
 				}else{
 					$this->data['error'] = 'Ogłoszenie usunięte ...';
@@ -260,8 +261,25 @@ class Ogloszenia extends AC_Controller
 		if(!is_numeric($adId)){
 			$this->data['error'] = 'Nie podano ID ogłoszenia...';
 		}else{
-
+			$tablica_obserwacji = $this->adsmodel->observedFind(['id_offer' => $adId]);
+			$this->data['ilosc_obserwacji'] = is_array($tablica_obserwacji) ? count($tablica_obserwacji) : 0;
+			$this->data['ilosc_odpowiedzi'] = $this->adsmodel->countResponses($adId);
+			$this->data['ilosc_wyswietlen'] = array_sum(array_column($this->adsmodel->viewsFind(['id_offer' => $adId]), 'counter'));
+			$this->data['id_offer'] = $adId;
+			//Kint::dump($this->data);
+			//$this->adsmodel->viewsFind();
 			$this->twig->display('ogloszenia/statystyki.html', $this->data);
 		}
+	}
+
+	function edycja(){
+
+	}
+
+	function dane_wykresu(){
+		$adId = $this->uri->segment(3, 0);
+		header('Content-Type: application/json');
+		$this->output->enable_profiler(FALSE);
+		echo json_encode($this->adsmodel->chartData($adId));
 	}
 }

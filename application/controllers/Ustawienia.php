@@ -274,11 +274,11 @@ class Ustawienia extends AC_Controller
 		$this->twig->display('settings/logowanie_ustaw_haslo.html', $this->data);
 	}
 
-	function daneosobowe()
-	{
+	function daneosobowe(){
 		//TODO
 		$this->twig->display('settings/daneosobowe.html', $this->data);
 	}
+
 	function historia_logowania(){
 
 		$this->data['historia_logowania'] = $this->historymodel->logowanie(['id_user' => $this->data['user']['id']]);
