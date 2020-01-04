@@ -2,20 +2,109 @@
 
 {% extends 'base.html.twig' %}
 
+{% block css_scripts %}
+	<link rel="stylesheet" href="{{ base_url('css/chat.css') }}"/>
+{% endblock %}
+{% block js_scripts %}
+	<script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+	<script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+	<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+	<script src="https://unpkg.com/axios@0.19.0/dist/axios.js"></script>
+{% endblock %}
+
 {% block body %}
-	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-		<div id="vue_app">
-			${ message }
+	{% include 'page/alerts.html.twig' %}
+	<div class="messaging">
+		<div class="inbox_msg">
+			<div class="inbox_people">
+				<div class="headind_srch">
+					<div class="recent_heading">
+						<h1>Aktualne rozmowy</h1>
+					</div>
+				</div>
+				<div class="inbox_chat">
+					{% for aktualna_rozmowa in aktualne_rozmowy %}
+						<div class="chat_list active_chat">
+							<div class="chat_people">
+								<div class="chat_ib">
+									<h5>{{ aktualna_rozmowa.username }}, ogłoszenie "{{ aktualna_rozmowa.offer_name }}"</h5>
+								</div>
+								<a role="button" class="btn btn-primary" href="{{ base_url('rozmowy/index') }}/{{ aktualna_rozmowa.user_from }}/{{ aktualna_rozmowa.id_offer }}">Przejdź do rozmowy</a>
+							</div>
+						</div>
+					{% endfor %}
+				</div>
+			</div>
+			<div class="mesgs">
+				{% if segments.offer_id != 0 %}
+					<div id="root"></div>
+					<div class="type_msg">
+						<div class="input_msg_write">
+							<input type="text" class="write_msg" placeholder="Wprowadź wiadomość" />
+							<button class="msg_send_btn" type="button"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></button>
+						</div>
+					</div>
+				{% else %}
+					<h1>Wybierz rozmowę z menu po lewej</h1>
+				{% endif %}
+			</div>
 		</div>
-
-		<script>
-			var app = new Vue({
-				el: '#vue_app',
-                delimiters: ['${', '}'],
-				data: {
-					message: 'Hello Vue!'
+		<hr/>
+		<script type="text/babel">
+			function List(props) {
+				var chat_msg;
+				var fromUser = 1 == props.value.reply;
+				if(props.value.id_user == props.user_id){
+					fromUser = !fromUser;
 				}
-			})
-		</script>
+				if(fromUser){
+					chat_msg = <div className="outgoing_msg sent_msg"><p>{props.value.text}</p><span className="time_date">{props.value.time}</span></div>;
+				} else {
+					chat_msg = <div className="incoming_msg received_msg received_withd_msg"><p>{props.value.text}</p><span className="time_date">{props.value.time}</span></div>;
+				}
 
+				return chat_msg;
+			}
+
+			class ListChat extends React.Component {
+				constructor(props) {
+					super(props);
+					this.state = { msgs: [] };
+					this.user_id = {{ user.id }};
+				}
+
+				componentDidMount() {
+					setInterval(() => {
+						fetch('{{ base_url('rozmowy/get_messeges') }}/{{ segments.user_id }}/{{ segments.offer_id }}')
+								.then(res => res.json())
+								.then(json => this.setState({msgs: json, loading: false}));
+					}, 1000);
+				}
+				render() {
+					const productsList = this.state.msgs.map((product, key) =>{
+						return(
+								<List
+										value = {product}
+										key = {key}
+										user_id = {this.user_id}
+								/>
+						)
+					});
+
+					return (
+							<div className="msg_history">
+								{productsList}
+							</div>
+					);
+				}
+			}
+
+			ReactDOM.render(
+					<ListChat />,
+					document.getElementById('root')
+			);
+
+		</script>
+	</div>
+	<hr/>
 {% endblock %}

@@ -12,12 +12,27 @@ class Rozmowy extends AC_Controller
     {
         parent::__construct();
         $this->load->library('twig');
+        $this->load->model('chatmodel');
+		if (!isset($data)) {
+			$data = [];
+		}
+		$this->data = array_merge(
+			$this->page_data(),
+			$data,
+			$this->session->flashdata()
+		);
     }
 
     function index(){
     	//TODO
-		$data = $this->page_data();
-		$this->twig->display('chat/index.html', $data);
+		$this->data['segments'] = [
+			'user_id' => $id_user = $this->uri->segment(3, 0),
+			'offer_id' => $offer_id = $this->uri->segment(4, 0)
+		];
+
+		$this->data['aktualne_rozmowy'] = $this->chatmodel->getChats(['where' => ['offers.id_user' => $this->data['user']['id']]]);
+		//Kint::dump($this->data);
+		$this->twig->display('chat/index.html', $this->data);
     }
 
     function historia(){
@@ -26,4 +41,17 @@ class Rozmowy extends AC_Controller
 		$this->twig->display('chat/historia.html', $data);
     }
 
+    function get_messeges(){
+    	$id_user = $this->uri->segment(3, 0);
+		$offer_id = $this->uri->segment(4, 0);
+		header('Content-Type: application/json');
+    	$messeges = json_encode($this->chatmodel->getMesseges(['where' => ['msgs.id_user' => $id_user, 'msgs.id_offer' => $offer_id], 'limit' => 20]));
+		$this->output->enable_profiler(FALSE);
+		//Kint::dump($messeges, $this->data['user']['id']);
+		echo $messeges;
+	}
+
+	function save_message(){
+
+	}
 }

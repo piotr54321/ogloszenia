@@ -17,13 +17,15 @@
 		"chriskacerguis/codeigniter-restserver": "^3.0",
 		"firebase/php-jwt": "^5.0",
       "ext-json": "*",
-		"ext-curl": "*"
+		"ext-curl": "*",
+		"cboden/ratchet": "^0.4.1"
 	},
 	"suggest": {
 		"paragonie/random_compat": "Provides better randomness in PHP 5.x"
 	},
 	"require-dev": {
 		"mikey179/vfsStream": "1.1.*",
-		"phpunit/phpunit": "4.* || 5.*"
+		"phpunit/phpunit": "4.* || 5.*",
+		"kint-php/kint": "^3.3"
 	}
 }
