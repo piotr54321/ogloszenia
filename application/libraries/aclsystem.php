@@ -6,7 +6,7 @@
  * Time: 21:10
  */
 
-class ACLsystem{
+class aclsystem{
     protected $CI;
     protected $user_id=0;
     public $allResourcesNames;
