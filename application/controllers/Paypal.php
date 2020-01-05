@@ -6,8 +6,7 @@ class Paypal extends CI_Controller{
 		parent::__construct();
 
 		$this->load->library('paypal_lib');
-		$this->load->model('product');
-		$this->load->model('walletmodel');
+		$this->load->model('WalletModel');
 	}
 
 	function ipn(){
@@ -26,7 +25,7 @@ class Paypal extends CI_Controller{
 				$data['payment_status'] = $paypalInfo["payment_status"];
 
 				//TODO ??
-				$this->walletmodel->walletUpdate(['operation' => true, 'id_user' => $data['user_id'], 'id_currency' => $data['product_id'], 'amount' => $data['payment_gross']]);
+				$this->WalletModel->walletUpdate(['operation' => true, 'id_user' => $data['user_id'], 'id_currency' => $data['product_id'], 'amount' => $data['payment_gross']]);
 			}
 		}
 	}

@@ -12,7 +12,7 @@ class Rozmowy extends AC_Controller
     {
         parent::__construct();
         $this->load->library('twig');
-        $this->load->model('chatmodel');
+        $this->load->model('ChatModel');
 		if (!isset($data)) {
 			$data = [];
 		}
@@ -30,7 +30,7 @@ class Rozmowy extends AC_Controller
 			'offer_id' => $offer_id = $this->uri->segment(4, 0)
 		];
 
-		$this->data['aktualne_rozmowy'] = $this->chatmodel->getChats(['where' => ['offers.id_user' => $this->data['user']['id']]]);
+		$this->data['aktualne_rozmowy'] = $this->ChatModel->getChats(['where' => ['offers.id_user' => $this->data['user']['id']]]);
 		//Kint::dump($this->data);
 		$this->twig->display('chat/index.html', $this->data);
     }
@@ -45,7 +45,7 @@ class Rozmowy extends AC_Controller
     	$id_user = $this->uri->segment(3, 0);
 		$offer_id = $this->uri->segment(4, 0);
 		header('Content-Type: application/json');
-    	$messeges = json_encode($this->chatmodel->getMesseges(['where' => ['msgs.id_user' => $id_user, 'msgs.id_offer' => $offer_id], 'limit' => 20]));
+    	$messeges = json_encode($this->ChatModel->getMesseges(['where' => ['msgs.id_user' => $id_user, 'msgs.id_offer' => $offer_id], 'limit' => 20]));
 		$this->output->enable_profiler(FALSE);
 		//Kint::dump($messeges, $this->data['user']['id']);
 		echo $messeges;

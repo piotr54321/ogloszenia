@@ -14,7 +14,7 @@ class Mojportfel extends AC_Controller
     {
 		parent::__construct();
 		$this->load->library('twig');
-		$this->load->model('walletmodel');
+		$this->load->model('WalletModel');
 		$this->load->library('form_validation');
 		$this->load->helper('security');
 		$this->load->library('paypal_lib');
@@ -30,9 +30,9 @@ class Mojportfel extends AC_Controller
 
     function index(){
 
-		$this->data['my_wallets'] = $this->walletmodel->walletsFind(['wallet.id_user' => $this->data['user']['id']]);
+		$this->data['my_wallets'] = $this->WalletModel->walletsFind(['wallet.id_user' => $this->data['user']['id']]);
 		if(!$this->data['my_wallets']){
-			if($this->walletmodel->walletCreate(['id_user' => $this->data['user']['id'], 'amount' => 100, 'id_currency' => $this->walletmodel->currenciesFind(['currency_code' => 'PLN'])[0]['id_currency']])) { //Tworzenie pierwszego portfela o wartości 100 PLN
+			if($this->WalletModel->walletCreate(['id_user' => $this->data['user']['id'], 'amount' => 100, 'id_currency' => $this->WalletModel->currenciesFind(['currency_code' => 'PLN'])[0]['id_currency']])) { //Tworzenie pierwszego portfela o wartości 100 PLN
 				$this->session->set_flashdata(
 					'complete',
 					'Dodano pierwszy portfel o wartości 100 PLN :)'
@@ -61,7 +61,7 @@ class Mojportfel extends AC_Controller
 			redirect('/mojportfel/wplata/', 'location');
 		};
 
-		$this->data['available_currencies'] = $this->walletmodel->currenciesFind(['enabled' => 1]);
+		$this->data['available_currencies'] = $this->WalletModel->currenciesFind(['enabled' => 1]);
 
 		if($this->input->post('submit') == 'PayPal'){
 			$this->form_validation->set_rules('id_currency', 'id_currency', 'trim|xss_clean');
@@ -75,7 +75,7 @@ class Mojportfel extends AC_Controller
 				$this->session->set_flashdata('errors', $this->form_validation->error_array());
 				redirect('/mojportfel/wplata/', 'location');
 			}else{
-				$currency_code = $this->walletmodel->currenciesFind(['id_currency' => $this->input->post('id_currency')])[0]['currency_code'];
+				$currency_code = $this->WalletModel->currenciesFind(['id_currency' => $this->input->post('id_currency')])[0]['currency_code'];
 				$this->paypal_lib->add_field('return', base_url('/mojportfel/wplata/success'));
 				$this->paypal_lib->add_field('cancel_return', base_url('/mojportfel/wplata/cancel'));
 				$this->paypal_lib->add_field('notify_url', base_url('/paypal/ipn'));

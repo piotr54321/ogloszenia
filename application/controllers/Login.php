@@ -12,8 +12,8 @@ class Login extends AC_Controller
 		parent::__construct();
 		$this->load->library('twig');
 		$this->load->helper('security');
-		$this->load->model('usermodel');
-		$this->load->model('loginmodel');
+		$this->load->model('UserModel');
+		$this->load->model('LoginModel');
 		$this->load->library('form_validation');
 	}
 
@@ -33,12 +33,12 @@ class Login extends AC_Controller
 					'username' => $this->input->post('username'),
 					'password' => $this->input->post('password')
 				];
-				if ($this->loginmodel->checkPass($dataFromForm)) {
+				if ($this->LoginModel->checkPass($dataFromForm)) {
 					$data['complete'] = 'Zalogowano';
 					$this->session->set_userdata(
-						$this->loginmodel->sessionUserData($dataFromForm['username'])
+						$this->LoginModel->sessionUserData($dataFromForm['username'])
 					);
-					$this->loginmodel->addLoginHistory($this->session->userdata('user_id'));
+					$this->LoginModel->addLoginHistory($this->session->userdata('user_id'));
 					redirect('/');
 				} else {
 					$data['errors']['other'] = 'Błąd logowania, spróbuj jeszcze raz...';
@@ -90,7 +90,7 @@ class Login extends AC_Controller
 					'password2' => $this->input->post('password2'),
 					'email' => $this->input->post('email')
 				];
-				if ($this->usermodel->userCreate($dataFromForm)) {
+				if ($this->UserModel->userCreate($dataFromForm)) {
 					$data['isgood'] = 'Aby dokończyć rejestrację, przejdź do swojej skrzynki oraz potwierdź swój adres email';
 				} else {
 					$data['errors']['other'] = 'Błąd rejestracji, spróbuj jeszcze raz...';

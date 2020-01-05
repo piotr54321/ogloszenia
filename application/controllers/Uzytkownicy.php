@@ -11,8 +11,8 @@ class Uzytkownicy extends AC_Controller
 	{
 		parent::__construct();
 		$this->load->library('twig');
-		$this->load->model('usersmodel');
-		$this->load->model('accessmodel');
+		$this->load->model('UsersModel');
+		$this->load->model('AccessModel');
 		$this->load->library('form_validation');
 		$this->load->helper('security');
 		if (!isset($data)) {
@@ -27,7 +27,7 @@ class Uzytkownicy extends AC_Controller
 
 	function index()
 	{
-		$this->data['allUsers'] = $this->usersmodel->getUsers();
+		$this->data['allUsers'] = $this->UsersModel->getUsers();
 
 		//var_dump($data['allUsers']);
 		$this->twig->display('users/index.html', $this->data);
@@ -40,7 +40,7 @@ class Uzytkownicy extends AC_Controller
 		if (!is_numeric($userId)) {
 			$this->data['error'] = 'Nieprawidłowe ID użytkownika';
 		} else {
-			$this->data['findUser'] = $this->usersmodel->getUsers([
+			$this->data['findUser'] = $this->UsersModel->getUsers([
 				'id' => $userId
 			])[0];
 			//var_dump($data['findUser']);
@@ -97,7 +97,7 @@ class Uzytkownicy extends AC_Controller
 						'banned' => $this->input->post('banned'),
 						'id' => $this->input->post('userID')
 					];
-					if ($this->usersmodel->userUpdate($user_data_set)) {
+					if ($this->UsersModel->userUpdate($user_data_set)) {
 						$this->session->set_flashdata(
 							'complete',
 							'Poprawnie zmieniono dane użytkownika'
@@ -121,16 +121,16 @@ class Uzytkownicy extends AC_Controller
 		if (!is_numeric($userId)) {
 			$this->data['error'] = 'Nieprawidłowe ID użytkownika';
 		} else {
-			$this->data['find_user'] = $this->usersmodel->getUsers([
+			$this->data['find_user'] = $this->UsersModel->getUsers([
 				'id' => $userId
 			])[0];
 			//var_dump($this->data['find_user']);
-			$this->data['find_user_roles'] = $this->usersmodel->getUsersRoles2(
+			$this->data['find_user_roles'] = $this->UsersModel->getUsersRoles2(
 				$userId
 			);
 			$this->data[
 				'find_user_resources'
-			] = $this->usersmodel->getUserResources($userId);
+			] = $this->UsersModel->getUserResources($userId);
 
 			if ($this->input->post()) {
 				$this->form_validation->set_rules(
@@ -164,7 +164,7 @@ class Uzytkownicy extends AC_Controller
 						'id' => $this->input->post('userID')
 					];
 
-					if ($this->usersmodel->userRolesUpdate($user_data_set)) {
+					if ($this->UsersModel->userRolesUpdate($user_data_set)) {
 						$this->session->set_flashdata(
 							'complete',
 							'Poprawnie zmieniono dane użytkownika'

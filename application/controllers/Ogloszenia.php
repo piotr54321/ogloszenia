@@ -17,10 +17,10 @@ class Ogloszenia extends AC_Controller
     {
         parent::__construct();
         $this->load->library('twig');
-        $this->load->model('categoriesmodel');
-        $this->load->model('addressesmodel');
-		$this->load->model('walletmodel');
-        $this->load->model('adsmodel');
+        $this->load->model('CategoriesModel');
+        $this->load->model('AddressesModel');
+		$this->load->model('WalletModel');
+        $this->load->model('AdsModel');
 		$this->load->library('form_validation');
 		$this->load->helper('security');
 		if (!isset($data)) {
@@ -36,7 +36,7 @@ class Ogloszenia extends AC_Controller
 
     function index(){
     	//TODO
-		$this->data['my_ads'] = $this->adsmodel->adsFind(['id_user' => $this->data['user']['id']]);
+		$this->data['my_ads'] = $this->AdsModel->adsFind(['id_user' => $this->data['user']['id']]);
 		//var_dump($this->data['my_ads']);
 		$this->twig->display('ogloszenia/index.html', $this->data);
     }
@@ -44,8 +44,8 @@ class Ogloszenia extends AC_Controller
     function noweogloszenie(){
 
 		//TODO jeżeli nie ma środków to
-		$this->data['user_adressess'] = $this->addressesmodel->adressesFind(['id_user' => $this->data['user']['id']]);
-		$this->data['available_currencies'] = $this->walletmodel->currenciesFind(['enabled' => 1]);
+		$this->data['user_adressess'] = $this->AddressesModel->adressesFind(['id_user' => $this->data['user']['id']]);
+		$this->data['available_currencies'] = $this->WalletModel->currenciesFind(['enabled' => 1]);
 		//var_dump($this->input->post());
 		//var_dump($_FILES);
 		if($this->input->post()){
@@ -90,9 +90,9 @@ class Ogloszenia extends AC_Controller
 				];
 
 				$this->db->trans_begin();
-				if($this->categoriesmodel->categoryFind(['categories.enable' => 1, 'categories.paid' => 1, 'id_category' => $this->input->post('id_category')])){
-					if(is_array($this->walletmodel->walletsFind(['wallet.id_user' => $this->data['user']['id'], 'wallet.amount' => 5, 'currencies.currency_code' => 'PLN']))){
-						$this->walletmodel->walletUpdate(['id_currency' => $this->walletmodel->currenciesFind(['currency_code' => 'PLN'])[0]['id_currency'], 'id_user' => $this->data['user']['id'], 'operation' => false, 'amount' => 5]);
+				if($this->CategoriesModel->categoryFind(['categories.enable' => 1, 'categories.paid' => 1, 'id_category' => $this->input->post('id_category')])){
+					if(is_array($this->WalletModel->walletsFind(['wallet.id_user' => $this->data['user']['id'], 'wallet.amount' => 5, 'currencies.currency_code' => 'PLN']))){
+						$this->WalletModel->walletUpdate(['id_currency' => $this->WalletModel->currenciesFind(['currency_code' => 'PLN'])[0]['id_currency'], 'id_user' => $this->data['user']['id'], 'operation' => false, 'amount' => 5]);
 					}else{
 						$this->db->trans_rollback();
 						$this->session->set_flashdata('error', 'Ta kategoria jest płatna, niestety nie posiadasz nic w portfelu.');
@@ -100,7 +100,7 @@ class Ogloszenia extends AC_Controller
 					}
 				}
 
-				$dataOffer = $this->adsmodel->adInsert($dataInsert);
+				$dataOffer = $this->AdsModel->adInsert($dataInsert);
 				if($dataOffer){
 					$this->upload_files($dataOffer);
 				}
@@ -114,9 +114,9 @@ class Ogloszenia extends AC_Controller
 				}
 			}
 		}
-		Kint::dump($this->walletmodel->walletUpdate(['id_currency' => $this->walletmodel->currenciesFind(['currency_code' => 'PLN'])[0]['id_currency'], 'id_user' => $this->data['user']['id'], 'operation' => false, 'amount' => 5]));
+		Kint::dump($this->WalletModel->walletUpdate(['id_currency' => $this->WalletModel->currenciesFind(['currency_code' => 'PLN'])[0]['id_currency'], 'id_user' => $this->data['user']['id'], 'operation' => false, 'amount' => 5]));
 
-		$this->data['categories'] = $this->categoriesmodel->categoryFind(['categories.enable' => 1]);
+		$this->data['categories'] = $this->CategoriesModel->categoryFind(['categories.enable' => 1]);
 		$this->twig->display('ogloszenia/noweogloszenie.html', $this->data);
     }
 
@@ -156,7 +156,7 @@ class Ogloszenia extends AC_Controller
 					$uploadData = $this->upload->data();
 					$filename = $uploadData['file_name'];
 					$imageInsert['filename'] = $filename;
-					$this->adsmodel->imageInsert($imageInsert);
+					$this->AdsModel->imageInsert($imageInsert);
 				}
 			}
 		}
@@ -166,18 +166,18 @@ class Ogloszenia extends AC_Controller
 		if(!is_numeric($adId)){
 			$this->data['error'] = 'Nie podano ID ogłoszenia...';
 		}else{
-			$this->data['ad'] = $this->adsmodel->adsFind(['id_offer' => $adId])[0];
+			$this->data['ad'] = $this->AdsModel->adsFind(['id_offer' => $adId])[0];
 			if($this->data['ad'] != FALSE) {
 				if($this->data['ad']['accept'] == 0 && @$this->data['user']['id'] != $this->data['ad']['id_user'] && in_array('ogloszenia:moderacja_ogloszeniami', $this->data['dostepneStrony'])){ //Ogłoszenie niezakceptowane -> moderator musi je zaakceptować //TODO coś innego zamiast @
 					$this->data['error'] = 'To ogłoszenie nie zostało jeszcze zaakceptowane...';
 				}elseif($this->data['ad']['accept'] == 1 || $this->data['user']['id'] == $this->data['ad']['id_user']){
-					$this->data['ad_currency'] = $this->walletmodel->currenciesFind(['id_currency' => $this->data['ad']['id_currency']])[0];
-					$this->data['ad_images'] = $this->adsmodel->imagesFind(['id_offer' => $this->data['ad']['id_offer']]);
-					$this->data['ad_address'] = $this->addressesmodel->adressesFind(['id_address' => $this->data['ad']['id_address']])[0];
-					$this->data['ad_category'] = $this->categoriesmodel->categoryFind(['categories.id_category' => $this->data['ad']['id_category']])[0];
-					@$this->data['ad_observed'] = $this->adsmodel->observedFind(['id_user' => $this->data['user']['id'], 'id_offer' => $adId])[0];
-					Kint::dump($this->data);
-					$this->adsmodel->addView($adId);
+					$this->data['ad_currency'] = $this->WalletModel->currenciesFind(['id_currency' => $this->data['ad']['id_currency']])[0];
+					$this->data['ad_images'] = $this->AdsModel->imagesFind(['id_offer' => $this->data['ad']['id_offer']]);
+					$this->data['ad_address'] = $this->AddressesModel->adressesFind(['id_address' => $this->data['ad']['id_address']])[0];
+					$this->data['ad_category'] = $this->CategoriesModel->categoryFind(['categories.id_category' => $this->data['ad']['id_category']])[0];
+					@$this->data['ad_observed'] = $this->AdsModel->observedFind(['id_user' => $this->data['user']['id'], 'id_offer' => $adId])[0];
+					//Kint::dump($this->data);
+					$this->AdsModel->addView($adId);
 				}else{
 					$this->data['error'] = 'Ogłoszenie usunięte ...';
 				}
@@ -190,7 +190,7 @@ class Ogloszenia extends AC_Controller
 
 	function moderacja_index(){
 
-		$this->data['moderation_ads'] = $this->adsmodel->adsFind(['accept' => 0]);
+		$this->data['moderation_ads'] = $this->AdsModel->adsFind(['accept' => 0]);
 		$this->twig->display('ogloszenia/moderacja/index.html', $this->data);
 	}
 
@@ -207,7 +207,7 @@ class Ogloszenia extends AC_Controller
 					'accept' => 1
 				]
 			];
-			$statusUpdate = $this->adsmodel->adUpdate($dataUpdate);
+			$statusUpdate = $this->AdsModel->adUpdate($dataUpdate);
 			if(!$statusUpdate){
 				$this->session->set_flashdata('error', 'Ogłoszenie nie zostało zaakceptowane');
 				redirect('/ogloszenia/moderacja_index/', 'location');
@@ -232,7 +232,7 @@ class Ogloszenia extends AC_Controller
 				]
 			];
 
-			$statusUpdate = $this->adsmodel->adUpdate($dataUpdate);
+			$statusUpdate = $this->AdsModel->adUpdate($dataUpdate);
 			if(!$statusUpdate){
 				$this->session->set_flashdata('error', 'Ogłoszenie nie zostało anulowane');
 				redirect('/ogloszenia/moderacja_index/', 'location');
@@ -258,7 +258,7 @@ class Ogloszenia extends AC_Controller
 				]
 			];
 
-			$result = $this->adsmodel->observedUpdate($dataUpdate);
+			$result = $this->AdsModel->observedUpdate($dataUpdate);
 			if($result){
 				$this->session->set_flashdata('success', 'Ogłoszenie nie zostało anulowane');
 				redirect('/ogloszenia/ad/'.$adId, 'location');
@@ -273,13 +273,13 @@ class Ogloszenia extends AC_Controller
 		if(!is_numeric($adId)){
 			$this->data['error'] = 'Nie podano ID ogłoszenia...';
 		}else{
-			$tablica_obserwacji = $this->adsmodel->observedFind(['id_offer' => $adId]);
+			$tablica_obserwacji = $this->AdsModel->observedFind(['id_offer' => $adId]);
 			$this->data['ilosc_obserwacji'] = is_array($tablica_obserwacji) ? count($tablica_obserwacji) : 0;
-			$this->data['ilosc_odpowiedzi'] = $this->adsmodel->countResponses($adId);
-			$this->data['ilosc_wyswietlen'] = array_sum(array_column($this->adsmodel->viewsFind(['id_offer' => $adId]), 'counter'));
+			$this->data['ilosc_odpowiedzi'] = $this->AdsModel->countResponses($adId);
+			$this->data['ilosc_wyswietlen'] = array_sum(array_column($this->AdsModel->viewsFind(['id_offer' => $adId]), 'counter'));
 			$this->data['id_offer'] = $adId;
 			//Kint::dump($this->data);
-			//$this->adsmodel->viewsFind();
+			//$this->AdsModel->viewsFind();
 			$this->twig->display('ogloszenia/statystyki.html', $this->data);
 		}
 	}
@@ -292,6 +292,6 @@ class Ogloszenia extends AC_Controller
 		$adId = $this->uri->segment(3, 0);
 		header('Content-Type: application/json');
 		$this->output->enable_profiler(FALSE);
-		echo json_encode($this->adsmodel->chartData($adId));
+		echo json_encode($this->AdsModel->chartData($adId));
 	}
 }

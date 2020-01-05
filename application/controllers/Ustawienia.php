@@ -17,11 +17,11 @@ class Ustawienia extends AC_Controller
 	{
 		parent::__construct();
 		$this->load->library('twig');
-		$this->load->model('usersmodel');
-		$this->load->model('accessmodel');
-		$this->load->model('addressesmodel');
-		$this->load->model('loginmodel');
-		$this->load->model('historymodel');
+		$this->load->model('UsersModel');
+		$this->load->model('AccessModel');
+		$this->load->model('AddressesModel');
+		$this->load->model('LoginModel');
+		$this->load->model('HistoryModel');
 		$this->load->library('form_validation');
 		$this->load->helper('security');
 		if (!isset($data)) {
@@ -37,7 +37,7 @@ class Ustawienia extends AC_Controller
 
 	function adresy()
 	{
-		$this->data['user_adressess'] = $this->addressesmodel->adressesFind(['id_user' => $this->data['user']['id']]);
+		$this->data['user_adressess'] = $this->AddressesModel->adressesFind(['id_user' => $this->data['user']['id']]);
 		//var_dump($this->data['user_adressess']);
 		$this->twig->display('settings/adresy.html', $this->data);
 	}
@@ -45,7 +45,7 @@ class Ustawienia extends AC_Controller
 	function adres_edytuj($address_id = null)
 	{
 		if (is_numeric($address_id)) {
-			$this->data['address_edited'] = $this->addressesmodel->adressesFind(['id_user' => $this->data['user']['id'], 'id_address' => $address_id])[0];
+			$this->data['address_edited'] = $this->AddressesModel->adressesFind(['id_user' => $this->data['user']['id'], 'id_address' => $address_id])[0];
 		}
 		if (!is_numeric($address_id) || $this->data['address_edited'] == false) {
 			$this->data['error'] = 'Nieprawidłowe ID adresu';
@@ -77,7 +77,7 @@ class Ustawienia extends AC_Controller
 						'id_address' => $this->input->post('addressID')
 					];
 
-					if ($this->addressesmodel->addressUpdate($data_address)) {
+					if ($this->AddressesModel->addressUpdate($data_address)) {
 						$this->session->set_flashdata('complete', 'Poprawnie zmieniono dane adresu');
 						redirect('/ustawienia/adres_edytuj/' . $address_id, 'location');
 					} else {
@@ -140,7 +140,7 @@ class Ustawienia extends AC_Controller
 					'main_address' => $this->input->post('main_address')
 				];
 
-				$addres_insert_status = $this->addressesmodel->addressInsert(
+				$addres_insert_status = $this->AddressesModel->addressInsert(
 					$data_address
 				);
 				if ($addres_insert_status) {
@@ -173,7 +173,7 @@ class Ustawienia extends AC_Controller
 				$data_address['where'] = [
 					'id_user' => $this->data['user']['id']
 				];
-				if ($this->addressesmodel->addressDelete($data_address)) {
+				if ($this->AddressesModel->addressDelete($data_address)) {
 					$this->session->set_flashdata('complete', 'Poprawnie usunięto adres');
 					redirect('/ustawienia/adresy/', 'location');
 				} else {
@@ -186,7 +186,7 @@ class Ustawienia extends AC_Controller
 
 	function logowanie()
 	{
-		$this->data['findUser'] = $this->usersmodel->getUsers([
+		$this->data['findUser'] = $this->UsersModel->getUsers([
 			'id' => $this->data['user']['id']
 		])[0];
 
@@ -214,7 +214,7 @@ class Ustawienia extends AC_Controller
 					'email' => $this->input->post('email'),
 					'id' => $this->data['user']['id']
 				];
-				if ($this->usersmodel->userUpdate($user_data_set)) {
+				if ($this->UsersModel->userUpdate($user_data_set)) {
 					$this->session->set_flashdata('complete', 'Poprawnie zmieniono dane użytkownika');
 					redirect('/ustawienia/logowanie/', 'location');
 				} else {
@@ -229,12 +229,12 @@ class Ustawienia extends AC_Controller
 
 	function logowanie_ustaw_haslo()
 	{
-		$this->data['findUser'] = $this->usersmodel->getUsers([
+		$this->data['findUser'] = $this->UsersModel->getUsers([
 			'id' => $this->data['user']['id']
 		])[0];
 
 		if ($this->input->post()) {
-			$this->form_validation->set_rules('password_old', 'password_old', ['required', 'trim', 'xss_clean', ['password_callable', function($string){return $this->loginmodel->checkPass(['username' => $this->data['user']['username'], 'password' => $string]); }]],
+			$this->form_validation->set_rules('password_old', 'password_old', ['required', 'trim', 'xss_clean', ['password_callable', function($string){return $this->LoginModel->checkPass(['username' => $this->data['user']['username'], 'password' => $string]); }]],
 				[
 					'required' => 'Nie wprowadziłeś hasła',
 					'password_callable' => 'Nie prawidłowe hasło'
@@ -261,7 +261,7 @@ class Ustawienia extends AC_Controller
 					'id' => $this->data['user']['id']
 				];
 
-				if ($this->usersmodel->userUpdate($user_data_set)) {
+				if ($this->UsersModel->userUpdate($user_data_set)) {
 					$this->session->set_flashdata('complete', 'Poprawnie zmieniono hasło');
 					redirect('/ustawienia/logowanie_ustaw_haslo/', 'location');
 				} else {
@@ -281,7 +281,7 @@ class Ustawienia extends AC_Controller
 
 	function historia_logowania(){
 
-		$this->data['historia_logowania'] = $this->historymodel->logowanie(['id_user' => $this->data['user']['id']]);
+		$this->data['historia_logowania'] = $this->HistoryModel->logowanie(['id_user' => $this->data['user']['id']]);
 		$this->twig->display('historia/logowanie.html', $this->data);
 	}
 }

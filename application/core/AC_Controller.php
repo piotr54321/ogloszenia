@@ -32,7 +32,7 @@ class AC_Controller extends CI_Controller{
     }
 
 	/**
-	 * 
+	 *
 	 */
 	function accessToPage(){
         if(!$this->aclsystem->checkResourceAccess($this->classMethod)){
@@ -45,7 +45,7 @@ class AC_Controller extends CI_Controller{
 	 */
 	function page_data(){
 		$data = [];
-		$user = $this->usermodel->getUser($this->session->user_id);
+		$user = $this->UserModel->getUser($this->session->user_id);
 		$user_rank = $this->aclsystem->getAllUserRanksList;
 		$data['dostepneStrony'] = array_values($this->aclsystem->allResourcesNames);
 		$data['nazwaRangi'] = array_column($user_rank, 'rolename')[(array_key_last(array_column($user_rank, 'rolename')))];
