@@ -43,7 +43,6 @@ class Ogloszenia extends AC_Controller
 
     function noweogloszenie(){
 
-    	//TODO
 		//TODO jeżeli nie ma środków to
 		$this->data['user_adressess'] = $this->addressesmodel->adressesFind(['id_user' => $this->data['user']['id']]);
 		$this->data['available_currencies'] = $this->walletmodel->currenciesFind(['enabled' => 1]);
@@ -72,6 +71,7 @@ class Ogloszenia extends AC_Controller
 				$this->session->set_flashdata('errors', $this->form_validation->error_array());
 				redirect('/ogloszenia/index/', 'location');
 			}else{
+
 				$DateTime = new DateTime('NOW');
 				$oldTime = $DateTime;
 				$DateTime->add(new DateInterval("P7D"));
@@ -88,7 +88,18 @@ class Ogloszenia extends AC_Controller
 					'price' => $this->input->post('price'),
 					'id_currency' => $this->input->post('id_currency')
 				];
+
 				$this->db->trans_begin();
+				if($this->categoriesmodel->categoryFind(['categories.enable' => 1, 'categories.paid' => 1, 'id_category' => $this->input->post('id_category')])){
+					if(is_array($this->walletmodel->walletsFind(['wallet.id_user' => $this->data['user']['id'], 'wallet.amount' => 5, 'currencies.currency_code' => 'PLN']))){
+						$this->walletmodel->walletUpdate(['id_currency' => $this->walletmodel->currenciesFind(['currency_code' => 'PLN'])[0]['id_currency'], 'id_user' => $this->data['user']['id'], 'operation' => false, 'amount' => 5]);
+					}else{
+						$this->db->trans_rollback();
+						$this->session->set_flashdata('error', 'Ta kategoria jest płatna, niestety nie posiadasz nic w portfelu.');
+						redirect('/ogloszenia/noweogloszenie/', 'location');
+					}
+				}
+
 				$dataOffer = $this->adsmodel->adInsert($dataInsert);
 				if($dataOffer){
 					$this->upload_files($dataOffer);
@@ -103,6 +114,7 @@ class Ogloszenia extends AC_Controller
 				}
 			}
 		}
+		Kint::dump($this->walletmodel->walletUpdate(['id_currency' => $this->walletmodel->currenciesFind(['currency_code' => 'PLN'])[0]['id_currency'], 'id_user' => $this->data['user']['id'], 'operation' => false, 'amount' => 5]));
 
 		$this->data['categories'] = $this->categoriesmodel->categoryFind(['categories.enable' => 1]);
 		$this->twig->display('ogloszenia/noweogloszenie.html', $this->data);

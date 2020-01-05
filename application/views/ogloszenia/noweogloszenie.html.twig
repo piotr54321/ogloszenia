@@ -15,7 +15,7 @@
 				<label for="id_category">Kategoria</label>
 				<select class="form-control" id="id_category" name="id_category">
 					{% for category in categories %}
-						<option value="{{ category.id_category }}">{{category.category_path}}{% if category.paid != 0 %}KATEGORIA PLATNA!!{% endif %}</option>
+						<option value="{{ category.id_category }}">{{category.category_path}}{% if category.paid != 0 %} <- kategoria płatna (5 PLN){% endif %}</option>
 					{% endfor %}
 				</select>
 			</div>

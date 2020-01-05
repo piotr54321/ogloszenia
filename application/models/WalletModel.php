@@ -15,7 +15,7 @@ class WalletModel extends CI_Model{
 		issetWhere($this->db, $dataFind, 'wallet.id_wallet');
 		issetWhere($this->db, $dataFind, 'wallet.id_user');
 		issetWhere($this->db, $dataFind, 'wallet.id_currency');
-		issetWhere($this->db, $dataFind, 'wallet.amount');
+		issetWhere($this->db, $dataFind, 'wallet.amount', '>=');
 		issetWhere($this->db, $dataFind, 'currencies.id_currency');
 		issetWhere($this->db, $dataFind, 'currencies.full_name');
 		issetWhere($this->db, $dataFind, 'currencies.currency_code');
