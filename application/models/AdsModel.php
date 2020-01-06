@@ -6,6 +6,7 @@ class AdsModel extends CI_Model{
 		parent::__construct();
 		$this->load->database();
 		$this->load->helper('dbHelp');
+		$this->load->helper('filehelp');
 	}
 
 	function adInsert(array $dataInsert){
@@ -259,10 +260,33 @@ class AdsModel extends CI_Model{
 		$query = $this->db->get();
 		if($query->num_rows() > 0){
 			$result = $query->result_array();
-			$data =[];
-			$data['x'] = array_column($result, 'x');
-			$data['y'] = array_column($result, 'y');
-			return $data;
+			$m = date("m");
+			$de= date("d");
+			$y= date("Y");
+			$dateArray = array();
+			for($i=0; $i<=13; $i++){
+				$dateArray[] = ['x' => date('Y-m-d', mktime(0,0,0,$m,($de-$i),$y)), 'y' => 0];
+			}
+			$dates = array_merge($result, $dateArray);
+			$keys = array_column($dates, 'x');
+			array_multisort($keys, SORT_DESC, $dates);
+			$finalArray = [];
+			foreach($dates as $item => $item_value) {
+				$pid = $item_value['x'];
+				if(!isset($finalArray[$pid])) {
+					$finalArray[$pid] = $item_value;
+				} else {
+					$finalArray[$pid]['y'] += $item_value['y'];
+				}
+			}
+			$finalArray = array_slice($finalArray, 0, 14);
+			$keys = array_column($finalArray, 'x');
+			array_multisort($keys, SORT_ASC, $finalArray);
+			//var_dump($finalArray);
+			$outputData =[];
+			$outputData['x'] = array_column($finalArray, 'x');
+			$outputData['y'] = array_column($finalArray, 'y');
+			return $outputData;
 		}else{
 			return false;
 		}

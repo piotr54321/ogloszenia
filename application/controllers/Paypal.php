@@ -24,7 +24,7 @@ class Paypal extends CI_Controller{
 				$data['payer_email'] = $paypalInfo["payer_email"];
 				$data['payment_status'] = $paypalInfo["payment_status"];
 
-				//TODO ??
+				file_put_contents('/var/www/html/xd.txt', var_export($data, TRUE));
 				$this->WalletModel->walletUpdate(['operation' => true, 'id_user' => $data['user_id'], 'id_currency' => $data['product_id'], 'amount' => $data['payment_gross']]);
 			}
 		}

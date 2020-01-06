@@ -55,6 +55,6 @@ $route['translate_uri_dashes'] = FALSE;
 
 //Routes
 $route['ad/(:num)'] = 'ogloszenia/ad/$1';
-
+$route['all'] = 'ogloszenia/adsgrid';
 //Api Routes
 

@@ -1,7 +1,7 @@
 
 
 <nav class="navbar navbar-light mb-4 navbar-expand-lg">
-	<a href="{{ site_url('home') }}" class="navbar-brand">Ogłoszenia *</a>
+	<a href="{{ base_url('home') }}" class="navbar-brand">Ogłoszenia *</a>
 	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContent">
 		<span class="navbar-toggler-icon"></span>
 	</button>
@@ -13,9 +13,9 @@
 						Mój portfel
 					</a>
 					<div class="dropdown-menu">
-						{% if 'mojportfel:index' in dostepneStrony %}<a class="dropdown-item" href="{{ site_url('mojportfel/index') }}">Podgląd salda</a>{% endif %}
-						{% if 'mojportfel:wplata' in dostepneStrony %}<a class="dropdown-item" href="{{ site_url('mojportfel/wplata') }}">Wpłać środki</a>{% endif %}
-						{% if 'mojportfel:historia' in dostepneStrony %}<a class="dropdown-item" href="{{ site_url('mojportfel/historia') }}">Historia transakcji</a>{% endif %}
+						{% if 'mojportfel:index' in dostepneStrony %}<a class="dropdown-item" href="{{ base_url('mojportfel/index') }}">Podgląd salda</a>{% endif %}
+						{% if 'mojportfel:wplata' in dostepneStrony %}<a class="dropdown-item" href="{{ base_url('mojportfel/wplata') }}">Wpłać środki</a>{% endif %}
+						{% if 'mojportfel:historia' in dostepneStrony %}<a class="dropdown-item" href="{{ base_url('mojportfel/historia') }}">Historia transakcji</a>{% endif %}
 					</div>
 				</li>
 			{% endif %}
@@ -25,7 +25,7 @@
 						Użytkownicy
 					</a>
 					<div class="dropdown-menu">
-						{% if 'uzytkownicy:index' in dostepneStrony %}<a class="dropdown-item" href="{{ site_url('uzytkownicy/index') }}">Podgląd</a>{% endif %}
+						{% if 'uzytkownicy:index' in dostepneStrony %}<a class="dropdown-item" href="{{ base_url('uzytkownicy/index') }}">Podgląd</a>{% endif %}
 					</div>
 				</li>
 			{% endif %}
@@ -35,9 +35,9 @@
 						Ogłoszenia
 					</a>
 					<div class="dropdown-menu">
-						{% if 'ogloszenia:index' in dostepneStrony %}<a class="dropdown-item" href="{{ site_url('ogloszenia/index') }}">Moje ogłoszenia</a>{% endif %}
-						{% if 'ogloszenia:noweogloszenie' in dostepneStrony %}<a class="dropdown-item" href="{{ site_url('ogloszenia/noweogloszenie') }}">Dodaj ogłoszenie</a>{% endif %}
-						{% if 'ogloszenia:moderacja_index' in dostepneStrony %}<a class="dropdown-item" href="{{ site_url('ogloszenia/moderacja_index') }}">Moderacja ogłoszeniami</a>{% endif %}
+						{% if 'ogloszenia:index' in dostepneStrony %}<a class="dropdown-item" href="{{ base_url('ogloszenia/index') }}">Moje ogłoszenia</a>{% endif %}
+						{% if 'ogloszenia:noweogloszenie' in dostepneStrony %}<a class="dropdown-item" href="{{ base_url('ogloszenia/noweogloszenie') }}">Dodaj ogłoszenie</a>{% endif %}
+						{% if 'ogloszenia:moderacja_index' in dostepneStrony %}<a class="dropdown-item" href="{{ base_url('ogloszenia/moderacja_index') }}">Moderacja ogłoszeniami</a>{% endif %}
 					</div>
 				</li>
 			{% endif %}
@@ -47,8 +47,8 @@
 						Wiadomości
 					</a>
 					<div class="dropdown-menu">
-						{% if 'rozmowy:index' in dostepneStrony %}<a class="dropdown-item" href="{{ site_url('rozmowy/index') }}">Aktualne rozmowy</a>{% endif %}
-						{% if 'rozmowy:historia' in dostepneStrony %}<a class="dropdown-item" href="{{ site_url('rozmowy/historia') }}">Archiwum rozmów</a>{% endif %}
+						{% if 'rozmowy:index' in dostepneStrony %}<a class="dropdown-item" href="{{ base_url('rozmowy/index') }}">Aktualne rozmowy</a>{% endif %}
+						{% if 'rozmowy:historia' in dostepneStrony %}<a class="dropdown-item" href="{{ base_url('rozmowy/historia') }}">Archiwum rozmów</a>{% endif %}
 					</div>
 				</li>
 			{% endif %}
@@ -58,11 +58,11 @@
 						Ustawienia
 					</a>
 					<div class="dropdown-menu">
-						<!---{% if 'ustawienia:index' in dostepneStrony %}<a class="dropdown-item" href="{{ site_url('ustawienia/index') }}">Podgląd ustawień</a>{% endif %}-->
-						{% if 'ustawienia:adresy' in dostepneStrony %}<a class="dropdown-item" href="{{ site_url('ustawienia/adresy') }}">Moje adresy</a>{% endif %}
-						{% if 'ustawienia:historia_logowania' in dostepneStrony %}<a class="dropdown-item" href="{{ site_url('ustawienia/historia_logowania') }}">Historia logowania</a>{% endif %}
-						{% if 'ustawienia:logowanie' in dostepneStrony %}<a class="dropdown-item" href="{{ site_url('ustawienia/logowanie') }}">Ustawienia logowania</a>{% endif %}
-						<!---{% if 'ustawienia:daneosobowe' in dostepneStrony %}<a class="dropdown-item" href="{{ site_url('ustawienia/daneosobowe') }}">Moje dane osobowe</a>{% endif %}-->
+						<!---{% if 'ustawienia:index' in dostepneStrony %}<a class="dropdown-item" href="{{ base_url('ustawienia/index') }}">Podgląd ustawień</a>{% endif %}-->
+						{% if 'ustawienia:adresy' in dostepneStrony %}<a class="dropdown-item" href="{{ base_url('ustawienia/adresy') }}">Moje adresy</a>{% endif %}
+						{% if 'ustawienia:historia_logowania' in dostepneStrony %}<a class="dropdown-item" href="{{ base_url('ustawienia/historia_logowania') }}">Historia logowania</a>{% endif %}
+						{% if 'ustawienia:logowanie' in dostepneStrony %}<a class="dropdown-item" href="{{ base_url('ustawienia/logowanie') }}">Ustawienia logowania</a>{% endif %}
+						<!---{% if 'ustawienia:daneosobowe' in dostepneStrony %}<a class="dropdown-item" href="{{ base_url('ustawienia/daneosobowe') }}">Moje dane osobowe</a>{% endif %}-->
 					</div>
 				</li>
 			{% endif %}
@@ -72,19 +72,19 @@
 			<ul class="navbar-nav">
 				<li class="nav-item dropleft">
 					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown">
-						{{  user.username }}
+						{{ user.username }}
 					</a>
 					<div class="dropdown-menu">
 						<a class="dropdown-item">Zalogowany jako: {{ nazwaRangi }}</a>
 						<div class="dropdown-divider"></div>
-						<a class="dropdown-item" href="{{ site_url('login/logout') }}">Wyloguj się</a>
+						<a class="dropdown-item" href="{{ base_url('login/logout') }}">Wyloguj się</a>
 					</div>
 				</li>
 			</ul>
 		{% else %}
 			<ul class="navbar-nav">
 				<li class="nav-item">
-					<a role="button" class="nav-link btn btn-outline-primary" href="{{ site_url('login') }}">Zaloguj się</a>
+					<a role="button" class="nav-link btn btn-outline-primary" href="{{ base_url('login/index') }}">Zaloguj się</a>
 				</li>
 			</ul>
 		{% endif %}

@@ -19,8 +19,7 @@ class CategoriesModel extends CI_Model{
 		$this->db->from('categories');
 		$query = $this->db->get();
 		if($query->num_rows() > 0){
-			$this->categories = $query->result_array();
-			return $this;
+			return $query->result_array();
 		}else{
 			return FALSE;
 		}

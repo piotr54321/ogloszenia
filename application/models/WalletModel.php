@@ -64,19 +64,19 @@ class WalletModel extends CI_Model{
 		}
 
 		$this->db->trans_start();
-		if(!$this->walletsFind(['id_user' => $dataUpdate['id_user'], 'id_currency' => $dataUpdate['id_currency']])){
+		if(!is_array($this->walletsFind(['wallet.id_user' => $dataUpdate['id_user'], 'wallet.id_currency' => $dataUpdate['id_currency']]))){
 			if(!$this->walletCreate(['id_user' => $dataUpdate['id_user'], 'id_currency' => $dataUpdate['id_currency']])){
 				return FALSE;
 			}
 		}
 
-		$this->db->set('amount', "amount".(($dataUpdate['operation'] == true) ?  '+' : '-').$dataUpdate['amount']);
+		$this->db->set('amount', "amount".(($dataUpdate['operation'] == true) ?  '+' : '-').$dataUpdate['amount'], false);
 		issetWhere($this->db, $dataUpdate, 'id_user');
 		issetWhere($this->db, $dataUpdate, 'id_currency');
 		$this->db->update('wallet');
 		$this->db->trans_complete();
 
-		if($this->db->trans_status() === FALSE || !$this->db->affected_rows()){
+		if($this->db->trans_status() === FALSE){
 			return FALSE;
 		}else{
 			return TRUE;

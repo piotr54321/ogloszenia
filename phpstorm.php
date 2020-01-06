@@ -67,15 +67,15 @@ die('This file is used for development purposes only.');
  * @property Ispconfig           $ispconfig                           This class enables you to use the ISPConfig 3 Remote API
  * @property Boleto              $boleto                              Boleto Class
  * @property Twig                $twig                                Twig Class
- * @property UserModel           $usermodel                           User Model
- * @property UsersModel          $usersmodel                          Users Model
- * @property LoginModel          $loginmodel                          Login Model
- * @property ACLsystem           $aclsystem                           ACL system
- * @property WalletModel         $walletmodel                         Wallet Model
- * @property AddressesModel      $addressesmodel                      Addresses Model
+ * @property UserModel           $UserModel                           User Model
+ * @property UsersModel          $UsersModel                          Users Model
+ * @property LoginModel          $LoginModel                          Login Model
+ * @property Aclsystem           $Aclsystem                           ACL system
+ * @property WalletModel         $WalletModel                         Wallet Model
+ * @property AddressesModel      $AddressesModel                      Adressess Model
  * @property Paypal_lib          $paypal_lib                          Paypal lib
- * @property AdsModel            $adsmodel                            Ads model
- * @property CategoriesModel     $categoriesmodel                     Categories model
+ * @property AdsModel            $AdsModel                            Ads model
+ * @property CategoriesModel     $CategoriesModel                     Categories model
  */
 class CI_Controller {
 
@@ -130,15 +130,15 @@ class CI_Controller {
  * @property CI_Zip              $zip                                 Zip Compression Class
  * @property CI_Utf8             $utf8                                Provides support for UTF-8 environments
  * @property Twig                $twig                                Twig Class
- * @property UserModel           $usermodel                           User Model
- * @property UsersModel          $usersmodel                          Users Model
- * @property LoginModel          $loginmodel                          Login Model
- * @property ACLsystem           $aclsystem                           ACL system
- * @property WalletModel         $walletmodel                         Wallet Model
- * @property AdressessModel      $adressessmodel                      Adressess Model
+ * @property UserModel           $UserModel                           User Model
+ * @property UsersModel          $UsersModel                          Users Model
+ * @property LoginModel          $LoginModel                          Login Model
+ * @property Aclsystem           $Aclsystem                           ACL system
+ * @property WalletModel         $WalletModel                         Wallet Model
+ * @property AddressesModel      $AddressesModel                      Adressess Model
  * @property Paypal_lib          $paypal_lib                          Paypal lib
- * @property AdsModel            $adsmodel                            Ads model
- * @property CategoriesModel     $categoriesmodel                     Categories model
+ * @property AdsModel            $AdsModel                            Ads model
+ * @property CategoriesModel     $CategoriesModel                     Categories model
  */
 class CI_Model {
 
@@ -193,15 +193,15 @@ class CI_Model {
  * @property CI_Zip              $zip                                 Zip Compression Class
  * @property CI_Utf8             $utf8                                Provides support for UTF-8 environments
  * @property Twig                $twig                                Twig Class
- * @property UserModel           $usermodel                           User Model
- * @property UsersModel          $usersmodel                          Users Model
- * @property LoginModel          $loginmodel                          Login Model
- * @property ACLsystem           $aclsystem                           ACL system
- * @property WalletModel         $walletmodel                         Wallet Model
- * @property AdressessModel      $adressessmodel                      Adressess Model
+ * @property UserModel           $UserModel                           User Model
+ * @property UsersModel          $UsersModel                          Users Model
+ * @property LoginModel          $LoginModel                          Login Model
+ * @property Aclsystem           $Aclsystem                           ACL system
+ * @property WalletModel         $WalletModel                         Wallet Model
+ * @property AddressesModel      $AddressesModel                      Adressess Model
  * @property Paypal_lib          $paypal_lib                          Paypal lib
- * @property AdsModel            $adsmodel                            Ads model
- * @property CategoriesModel     $categoriesmodel                     Categories model
+ * @property AdsModel            $AdsModel                            Ads model
+ * @property CategoriesModel     $CategoriesModel                     Categories model
  */
 class MX_Controller {
 

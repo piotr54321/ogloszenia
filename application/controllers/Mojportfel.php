@@ -76,9 +76,9 @@ class Mojportfel extends AC_Controller
 				redirect('/mojportfel/wplata/', 'location');
 			}else{
 				$currency_code = $this->WalletModel->currenciesFind(['id_currency' => $this->input->post('id_currency')])[0]['currency_code'];
-				$this->paypal_lib->add_field('return', base_url('/mojportfel/wplata/success'));
-				$this->paypal_lib->add_field('cancel_return', base_url('/mojportfel/wplata/cancel'));
-				$this->paypal_lib->add_field('notify_url', base_url('/paypal/ipn'));
+				$this->paypal_lib->add_field('return', base_url('mojportfel/wplata/success'));
+				$this->paypal_lib->add_field('cancel_return', base_url('mojportfel/wplata/cancel'));
+				$this->paypal_lib->add_field('notify_url', base_url('paypal/ipn'));
 				$this->paypal_lib->add_field('item_name', $this->input->post('id_currency'));
 				$this->paypal_lib->add_field('currency_code', $currency_code);
 				$this->paypal_lib->add_field('custom', $this->data['user']['id']);

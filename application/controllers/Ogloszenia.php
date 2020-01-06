@@ -114,7 +114,7 @@ class Ogloszenia extends AC_Controller
 				}
 			}
 		}
-		Kint::dump($this->WalletModel->walletUpdate(['id_currency' => $this->WalletModel->currenciesFind(['currency_code' => 'PLN'])[0]['id_currency'], 'id_user' => $this->data['user']['id'], 'operation' => false, 'amount' => 5]));
+		//Kint::dump($this->WalletModel->walletUpdate(['id_currency' => $this->WalletModel->currenciesFind(['currency_code' => 'PLN'])[0]['id_currency'], 'id_user' => $this->data['user']['id'], 'operation' => false, 'amount' => 5]));
 
 		$this->data['categories'] = $this->CategoriesModel->categoryFind(['categories.enable' => 1]);
 		$this->twig->display('ogloszenia/noweogloszenie.html', $this->data);
@@ -293,5 +293,11 @@ class Ogloszenia extends AC_Controller
 		header('Content-Type: application/json');
 		$this->output->enable_profiler(FALSE);
 		echo json_encode($this->AdsModel->chartData($adId));
+	}
+
+	function adsgrid(){
+		$this->data['dostepne_kategorie'] = $this->CategoriesModel->categoryFind(['categories.enable' => 1]);
+		$this->twig->display('ogloszenia/all.html', $this->data);
+		Kint::dump($this->data);
 	}
 }
