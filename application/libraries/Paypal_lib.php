@@ -35,6 +35,7 @@ class Paypal_lib{
 
 		$sanbox = $this->CI->config->item('sandbox');
 		$this->paypal_url = ($sanbox == TRUE)?'https://www.sandbox.paypal.com/cgi-bin/webscr':'https://www.paypal.com/cgi-bin/webscr';
+		$this->paypal_url_ipn = ($sanbox == TRUE)?'https://ipnpb.sandbox.paypal.com/cgi-bin/webscr':'https://ipnpb.paypal.com/cgi-bin/webscr';
 
 		$this->last_error = '';
 		$this->ipn_response = '';
@@ -46,7 +47,7 @@ class Paypal_lib{
 
 		// populate $fields array with a few default values.
 		$businessEmail = $this->CI->config->item('business');
-		$this->add_field('business',$businessEmail);
+		$this->add_field('business', $businessEmail);
 		$this->add_field('rm','2');
 		$this->add_field('cmd','_xclick');
 
@@ -93,7 +94,7 @@ class Paypal_lib{
 	}
 
 	function validate_ipn($paypalReturn){
-		$ipn_response = $this->curlPost($this->paypal_url, $paypalReturn);
+		/*$ipn_response = $this->curlPost($this->paypal_url_ipn, $paypalReturn);
 
 		if(preg_match("/VERIFIED/i", $ipn_response)){
 			// Valid IPN transaction.
@@ -103,6 +104,55 @@ class Paypal_lib{
 			$this->last_error = 'IPN Validation Failed.';
 			$this->log_ipn_results(false);
 			return false;
+		}
+		*/
+		$raw_post_data = file_get_contents('php://input');
+		$raw_post_array = explode('&', $raw_post_data);
+		$myPost = array();
+		foreach ($raw_post_array as $keyval) {
+			$keyval = explode ('=', $keyval);
+			if (count($keyval) == 2)
+				$myPost[$keyval[0]] = urldecode($keyval[1]);
+		}
+// read the IPN message sent from PayPal and prepend 'cmd=_notify-validate'
+		$req = 'cmd=_notify-validate';
+		if (function_exists('get_magic_quotes_gpc')) {
+			$get_magic_quotes_exists = true;
+		}
+		foreach ($myPost as $key => $value) {
+			if ($get_magic_quotes_exists == true && get_magic_quotes_gpc() == 1) {
+				$value = urlencode(stripslashes($value));
+			} else {
+				$value = urlencode($value);
+			}
+			$req .= "&$key=$value";
+		}
+
+// Step 2: POST IPN data back to PayPal to validate
+		$ch = curl_init('https://ipnpb.paypal.com/cgi-bin/webscr');
+		curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $req);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+		curl_setopt($ch, CURLOPT_FORBID_REUSE, 1);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, array('Connection: Close'));
+// In wamp-like environments that do not come bundled with root authority certificates,
+// please download 'cacert.pem' from "https://curl.haxx.se/docs/caextract.html" and set
+// the directory path of the certificate as shown below:
+// curl_setopt($ch, CURLOPT_CAINFO, dirname(__FILE__) . '/cacert.pem');
+		if ( !($res = curl_exec($ch)) ) {
+			// error_log("Got " . curl_error($ch) . " when processing IPN data");
+			curl_close($ch);
+			exit;
+		}
+		curl_close($ch);
+
+		if (strcmp ($res, "VERIFIED") == 0) {
+			return TRUE;
+		} else if (strcmp ($res, "INVALID") == 0) {
+			return FALSE;
 		}
 	}
 

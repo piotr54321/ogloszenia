@@ -1,6 +1,7 @@
 <?php
 
-class WalletModel extends CI_Model{
+class WalletModel extends CI_Model
+{
 	public function __construct()
 	{
 		parent::__construct();
@@ -8,7 +9,8 @@ class WalletModel extends CI_Model{
 		$this->load->helper('dbhelp');
 	}
 
-	function walletsFind(array $dataFind){
+	function walletsFind(array $dataFind)
+	{
 		$this->db->select('wallet.id_wallet, wallet.id_user, wallet.id_currency, wallet.amount, currencies.id_currency, currencies.full_name, currencies.currency_code, currencies.enabled');
 		$this->db->from('wallet');
 		$this->db->join('currencies', 'currencies.id_currency = wallet.id_currency');
@@ -22,14 +24,15 @@ class WalletModel extends CI_Model{
 		issetWhere($this->db, $dataFind, 'currencies.enabled');
 		$query = $this->db->get();
 
-		if($query->num_rows() > 0){
+		if ($query->num_rows() > 0) {
 			return $query->result_array();
-		}else{
+		} else {
 			return FALSE;
 		}
 	}
 
-	function currenciesFind(array $dataFind){
+	function currenciesFind(array $dataFind)
+	{
 		$this->db->select('id_currency, full_name, currency_code, enabled');
 		$this->db->from('currencies');
 		issetWhere($this->db, $dataFind, 'id_currency');
@@ -38,47 +41,55 @@ class WalletModel extends CI_Model{
 		issetWhere($this->db, $dataFind, 'enabled');
 		$query = $this->db->get();
 
-		if($query->num_rows() > 0){
+		if ($query->num_rows() > 0) {
 			return $query->result_array();
-		}else{
+		} else {
 			return FALSE;
 		}
 	}
 
-	function walletCreate(array $dataInsert){
+	function walletCreate(array $dataInsert)
+	{
 		issetSet($this->db, $dataInsert, 'id_user');
 		issetSet($this->db, $dataInsert, 'id_currency');
 		issetSet($this->db, $dataInsert, 'amount');
 		$this->db->insert('wallet');
 
-		if($this->db->affected_rows() > 0){
+		if ($this->db->affected_rows() > 0) {
 			return TRUE;
-		}else{
+		} else {
 			return FALSE;
 		}
 	}
 
-	function walletUpdate(array $dataUpdate){
-		if(!is_numeric($dataUpdate['id_currency']) || !is_numeric($dataUpdate['id_user']) || !is_bool($dataUpdate['operation']) || !is_numeric($dataUpdate['amount']) || $dataUpdate['amount'] <= 0){
+	function walletUpdate(array $dataUpdate)
+	{
+		//Sprawdzenie czy wszystkie parametry zostały poprawnie podane
+		if (!is_numeric($dataUpdate['id_currency']) || !is_numeric($dataUpdate['id_user']) || !is_bool($dataUpdate['operation']) || !is_numeric($dataUpdate['amount']) || $dataUpdate['amount'] <= 0) {
 			return FALSE;
 		}
 
 		$this->db->trans_start();
-		if(!is_array($this->walletsFind(['wallet.id_user' => $dataUpdate['id_user'], 'wallet.id_currency' => $dataUpdate['id_currency']]))){
-			if(!$this->walletCreate(['id_user' => $dataUpdate['id_user'], 'id_currency' => $dataUpdate['id_currency']])){
+		if (!is_array($this->walletsFind([
+			'wallet.id_user' => $dataUpdate['id_user'], 'wallet.id_currency' => $dataUpdate['id_currency']
+		]))) {
+			if (!$this->walletCreate([
+				'id_user' => $dataUpdate['id_user'], 'id_currency' => $dataUpdate['id_currency']
+			])) {
 				return FALSE;
 			}
 		}
 
-		$this->db->set('amount', "amount".(($dataUpdate['operation'] == true) ?  '+' : '-').$dataUpdate['amount'], false);
+		$operator = (($dataUpdate['operation'] == true) ? '+' : '-');
+		$this->db->set('amount', "amount".$operator.$dataUpdate['amount'], false);
 		issetWhere($this->db, $dataUpdate, 'id_user');
 		issetWhere($this->db, $dataUpdate, 'id_currency');
 		$this->db->update('wallet');
 		$this->db->trans_complete();
 
-		if($this->db->trans_status() === FALSE){
+		if ($this->db->trans_status() === FALSE) {
 			return FALSE;
-		}else{
+		} else {
 			return TRUE;
 		}
 	}
