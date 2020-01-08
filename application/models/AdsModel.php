@@ -54,6 +54,7 @@ class AdsModel extends CI_Model{
 		issetSet($this->db, $dataUpdate['update'], 'negotiation');
 		issetSet($this->db, $dataUpdate['update'], 'price');
 		issetSet($this->db, $dataUpdate['update'], 'id_currency');
+		issetSet($this->db, $dataUpdate['update'], 'ended');
 
 		//WHERE
 		issetWhere($this->db, $dataUpdate['where'], 'id_category');
@@ -68,6 +69,7 @@ class AdsModel extends CI_Model{
 		issetWhere($this->db, $dataUpdate['where'], 'negotiation');
 		issetWhere($this->db, $dataUpdate['where'], 'price');
 		issetWhere($this->db, $dataUpdate['where'], 'id_currency');
+		issetWhere($this->db, $dataUpdate['where'], 'ended');
 
 		$this->db->update('offers');
 		if($this->db->affected_rows() > 0){

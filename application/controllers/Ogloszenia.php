@@ -300,4 +300,54 @@ class Ogloszenia extends AC_Controller
 		$this->twig->display('ogloszenia/all.html', $this->data);
 		Kint::dump($this->data);
 	}
+
+	function zakoncz(int $adId){
+		if(!is_numeric($adId)){
+			$this->data['error'] = 'Nie podano ID ogłoszenia...';
+		}else{
+
+			$dataUpdate = [
+				'where' => [
+					'id_offer' => $adId
+				],
+				'update' => [
+					'ended' => 1
+				]
+			];
+
+			$statusUpdate = $this->AdsModel->adUpdate($dataUpdate);
+			if(!$statusUpdate){
+				$this->session->set_flashdata('error', 'Ogłoszenie nie zostało zakończone');
+				redirect('/ogloszenia/index', 'location');
+			}else{
+				$this->session->set_flashdata('complete', 'Poprawnie zakończono ogłoszenie.');
+				redirect('/ogloszenia/index', 'location');
+			}
+		}
+	}
+
+	function moderacja_zakoncz(int $adId){
+		if(!is_numeric($adId)){
+			$this->data['error'] = 'Nie podano ID ogłoszenia...';
+		}else{
+
+			$dataUpdate = [
+				'where' => [
+					'id_offer' => $adId
+				],
+				'update' => [
+					'ended' => 1
+				]
+			];
+
+			$statusUpdate = $this->AdsModel->adUpdate($dataUpdate);
+			if(!$statusUpdate){
+				$this->session->set_flashdata('error', 'Ogłoszenie nie zostało anulowane');
+				redirect('/ogloszenia/moderacja_index/', 'location');
+			}else{
+				$this->session->set_flashdata('complete', 'Poprawnie zakończono ogłoszenie.');
+				redirect('/ogloszenia/moderacja_index/', 'location');
+			}
+		}
+	}
 }

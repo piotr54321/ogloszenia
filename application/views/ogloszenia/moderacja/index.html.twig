@@ -36,6 +36,7 @@
 
 								<a href="#" class="btn btn-dark" role="button">Edycja ogłoszenie</a>
 								{% if 'ogloszenia:moderacja_akceptuj' in dostepneStrony and ad.accept == 0 %}<a href="{{ base_url('ogloszenia/moderacja_akceptuj/') }}{{ moderation_ad.id_offer }}" class="btn btn-dark" role="button">Akceptuj ogłoszenie</a>{% endif %}
+								{% if 'ogloszenia:moderacja_zakoncz' in dostepneStrony and ad.accept == 0 %}<a href="{{ base_url('ogloszenia/moderacja_zakoncz/') }}{{ moderation_ad.id_offer }}" class="btn btn-dark" role="button">Zakończ ogłoszenie</a>{% endif %}
 							</div>
 						</div>
 					</div>

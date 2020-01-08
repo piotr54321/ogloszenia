@@ -6,7 +6,29 @@
 	{% include 'page/alerts.html.twig' %}
 	<div class="container-fluid">
 		<h1>Historia transakcji</h1>
-
+		<table class="table">
+			<thead class="thead-dark">
+			<tr>
+				<th scope="col">#</th>
+				<th scope="col">Waluta</th>
+				<th scope="col">Ilość</th>
+				<th scope="col">Operacja</th>
+				<th scope="col">Ilość w portfelu po operacji</th>
+			</tr>
+			</thead>
+			<tbody>
+			{% for item in historia %}
+				<tr class="{% if item.type == 1 %}table-info{% elseif item.amount < 0 %}table-danger{% else %}table-success{% endif %}">
+					<th scope="row">{{ loop.index }}</th>
+					<td>{{ item.currency_code }}</td>
+					<td>{{ item.amount }}</td>
+					<td>{% if item.amount < 0 %}Płatność za ogłoszenie{% else %}Wpłata gotówki{% endif %}{% if item.type == 1 %} - Inicjalizacja portfela{% endif %}</td>
+					<td>{{ item.wallet_amount }}</td>
+				</tr>
+			{% endfor %}
+			</tbody>
+		</table>
 		<hr/>
+
 	</div>
 {% endblock %}

@@ -281,7 +281,7 @@ class Ustawienia extends AC_Controller
 
 	function historia_logowania(){
 
-		$this->data['historia_logowania'] = $this->HistoryModel->logowanie(['id_user' => $this->data['user']['id']]);
+		$this->data['historia_logowania'] = $this->HistoryModel->loginHistory(['id_user' => $this->data['user']['id']]);
 		$this->twig->display('historia/logowanie.html', $this->data);
 	}
 }
