@@ -123,7 +123,7 @@
 		<hr/>
 		{% if 'ogloszenia:moderacja_akceptuj' in dostepneStrony %}
 			<h5>Moderator:</h5>
-			<a href="{{ base_url('ogloszenia/moderacja_zakoncz/') }}" role="button" class="btn btn-primary btn-sm">Zakończ ogłoszenie <i class="fas fa-universal-access"></i></a>
+			<a href="{{ base_url('ogloszenia/moderacja_zakoncz/') }}{{ ad.id_offer }}" role="button" class="btn btn-primary btn-sm">Zakończ ogłoszenie <i class="fas fa-universal-access"></i></a>
 			<a href="{{ base_url('ogloszenia/moderacja_index/') }}" role="button" class="btn btn-primary btn-sm">Niezaakceptowane ogłoszenia <i class="fas fa-universal-access"></i></a>
 		{% endif %}
 	</div>

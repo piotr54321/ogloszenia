@@ -22,11 +22,19 @@ class UserModel extends CI_Model
 		if ($this->checkRowExist('email', $data['email'])) {
 			return false;
 		}
+		$this->db->trans_start();
 		$this->db->set('username', $data['username']);
 		$this->db->set('password', $this->generatePassHash($data['password']));
 		$this->db->set('email', $data['email']);
 		$this->db->insert('users');
-		if ($this->db->affected_rows() > 0) {
+
+		$LAST_ID = $this->db->insert_id();
+		$this->db->set('users_id', $LAST_ID);
+		$this->db->set('page_roles_id', 2);
+		$this->db->insert('users_roles');
+
+		$this->db->trans_complete();
+		if ($this->db->trans_status()) {
 			return true;
 		} else {
 			return false;
@@ -77,10 +85,6 @@ class UserModel extends CI_Model
 		} else {
 			return false;
 		}
-	}
-
-	function getAllUserResourcesNames()
-	{
 	}
 
 	function user($data = array())

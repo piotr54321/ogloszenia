@@ -5,7 +5,7 @@
 {% block body %}
 	{% include 'page/alerts.html.twig' %}
 	<div class="container-fluid">
-		<h1>Twoje ogłoszenia</h1>
+		<h1>Twoje zakończone ogłoszenia</h1>
 		<style>
 			.center-cropped {
 				width: 350px;
@@ -17,7 +17,7 @@
 		</style>
 		{% if my_ads == false %}
 			<div class="alert alert-info" role="alert">
-				Jeszcze nie dodałeś żadnego ogłoszenia, dodaj jakieś aby było tutaj widoczne ;)
+				Nie ma ogłoszeń które zostały zakończone ;)
 			</div>
 		{% else %}
 			{% for my_ad in my_ads %}

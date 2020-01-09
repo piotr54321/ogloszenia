@@ -36,10 +36,16 @@ class Ogloszenia extends AC_Controller
 
     function index(){
     	//TODO
-		$this->data['my_ads'] = $this->AdsModel->adsFind(['id_user' => $this->data['user']['id']]);
+		$this->data['my_ads'] = $this->AdsModel->adsFind(['id_user' => $this->data['user']['id'], 'ended' => 0]);
 		//var_dump($this->data['my_ads']);
 		$this->twig->display('ogloszenia/index.html', $this->data);
     }
+
+    function ogloszenia_zakonczone(){
+		$this->data['my_ads'] = $this->AdsModel->adsFind(['id_user' => $this->data['user']['id'], 'ended' => 1]);
+		//var_dump($this->data['my_ads']);
+		$this->twig->display('ogloszenia/zakonczone_index.html', $this->data);
+	}
 
     function noweogloszenie(){
 
@@ -119,6 +125,94 @@ class Ogloszenia extends AC_Controller
 		$this->data['categories'] = $this->CategoriesModel->categoryFind(['categories.enable' => 1]);
 		$this->twig->display('ogloszenia/noweogloszenie.html', $this->data);
     }
+
+	function edycja(int $adId){
+		if(!is_numeric($adId)){
+			$this->data['error'] = 'Nie podano ID ogłoszenia...';
+		}else{
+			$this->data['user_adressess'] = $this->AddressesModel->adressesFind(['id_user' => $this->data['user']['id']]);
+
+			$this->data['ad'] = $this->AdsModel->adsFind(['id_offer' => $adId])[0];
+			$this->data['ad_currency'] = $this->WalletModel->currenciesFind(['id_currency' => $this->data['ad']['id_currency']])[0];
+			$this->data['ad_images'] = $this->AdsModel->imagesFind(['id_offer' => $this->data['ad']['id_offer']]);
+			$this->data['ad_address'] = $this->AddressesModel->adressesFind(['id_address' => $this->data['ad']['id_address']])[0];
+			$this->data['ad_category'] = $this->CategoriesModel->categoryFind(['categories.id_category' => $this->data['ad']['id_category']])[0];
+
+			if($this->input->post()){
+				$this->form_validation->set_rules('offer_name', 'offer_name', 'trim|xss_clean|max_length[100]', [
+					'max_lenght' => 'Maksymalna długość nazwy to 100 znaków'
+				]);
+				$this->form_validation->set_rules('id_category', 'id_category', 'trim|xss_clean');
+				$this->form_validation->set_rules('description', 'description', 'trim|xss_clean|max_length[1000]', [
+					'max_lenght' => 'Maksymalna długość opisu to 1000 znaków'
+				]);
+				$this->form_validation->set_rules('id_address', 'id_address', 'trim|xss_clean');
+				$this->form_validation->set_rules('negotiation', 'negotiation', 'trim|xss_clean');
+				$this->form_validation->set_rules('price', 'price', 'trim|xss_clean');
+				$this->form_validation->set_rules('id_currency', 'id_currency', 'trim|xss_clean');
+				if($this->form_validation->run() == FALSE){
+					$this->session->set_flashdata('error', 'Błąd');
+					$this->session->set_flashdata('errors', $this->form_validation->error_array());
+					redirect('/ogloszenia/index/', 'location');
+				}else{
+
+					$DateTime = new DateTime('NOW');
+					$oldTime = $DateTime;
+					$DateTime->add(new DateInterval("P7D"));
+					$dataUpdate = [
+						'where' => [
+							'id_offer' => $adId
+						],
+						'update' => [
+							'id_category' => $this->input->post('id_category'),
+							'id_user' => $this->data['user']['id'],
+							'offer_name' => $this->input->post('offer_name'),
+							'accept' => 0,
+							'description' => $this->input->post('description'),
+							'create_time' => $oldTime->format('c'),
+							'end_time' => $DateTime->format('c'),
+							'id_address' => $this->input->post('id_address'),
+							'negotiation' => $this->input->post('negotiation'),
+							'price' => $this->input->post('price'),
+							'id_currency' => $this->input->post('id_currency')
+						]
+					];
+
+					/*$this->db->trans_begin();
+					if($this->CategoriesModel->categoryFind(['categories.enable' => 1, 'categories.paid' => 1, 'id_category' => $this->input->post('id_category')])){
+						if(is_array($this->WalletModel->walletsFind(['wallet.id_user' => $this->data['user']['id'], 'wallet.amount' => 5, 'currencies.currency_code' => 'PLN']))){
+							$this->WalletModel->walletUpdate(['id_currency' => $this->WalletModel->currenciesFind(['currency_code' => 'PLN'])[0]['id_currency'], 'id_user' => $this->data['user']['id'], 'operation' => false, 'amount' => 5]);
+						}else{
+							$this->db->trans_rollback();
+							$this->session->set_flashdata('error', 'Ta kategoria jest płatna, niestety nie posiadasz nic w portfelu.');
+							redirect('/ogloszenia/index/', 'location');
+						}
+					}*/
+
+					$adUpdate = $this->AdsModel->adUpdate($dataUpdate);
+					if($adUpdate){
+						$dataOffer = [
+							'insert_id' => $adId,
+							'id_user' => $this->data['user']['id']
+						];
+						$this->upload_files($dataOffer);
+					}
+					//$this->db->trans_complete();
+					if($adUpdate){
+						$this->session->set_flashdata('complete', 'Poprawnie edytowano ogłoszenie. Oczekuje ono na akceptację administratora.');
+						redirect('/ogloszenia/index/', 'location');
+					}else{
+						$this->session->set_flashdata('error', 'Niepowodzenie');
+						redirect('/ogloszenia/index/', 'location');
+					}
+				}
+			}
+
+		}
+		$this->data['available_currencies'] = $this->WalletModel->currenciesFind(['enabled' => 1]);
+		$this->data['categories'] = $this->CategoriesModel->categoryFind(['categories.enable' => 1]);
+		$this->twig->display('ogloszenia/edytujogloszenie.html', $this->data);
+	}
 
     function upload_files(array $dataOffer){
 
@@ -280,12 +374,8 @@ class Ogloszenia extends AC_Controller
 			$this->data['id_offer'] = $adId;
 			//Kint::dump($this->data);
 			//$this->AdsModel->viewsFind();
-			$this->twig->display('ogloszenia/statystyki.html', $this->data);
 		}
-	}
-
-	function edycja(){
-
+		$this->twig->display('ogloszenia/statystyki.html', $this->data);
 	}
 
 	function dane_wykresu(){

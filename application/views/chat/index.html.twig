@@ -23,16 +23,22 @@
 					</div>
 				</div>
 				<div class="inbox_chat">
-					{% for aktualna_rozmowa in aktualne_rozmowy %}
-						<div class="chat_list active_chat">
-							<div class="chat_people">
-								<div class="chat_ib">
-									<h5>{{ aktualna_rozmowa.username }}, ogłoszenie "{{ aktualna_rozmowa.offer_name }}"</h5>
-								</div>
-								<a role="button" class="btn btn-primary" href="{{ base_url('rozmowy/index') }}/{{ aktualna_rozmowa.user_from }}/{{ aktualna_rozmowa.id_offer }}">Przejdź do rozmowy</a>
-							</div>
+					{% if aktualne_rozmowy == false %}
+						<div class="alert alert-info" role="alert">
+							Aktualnie nie prowadzisz żadnych rozmów ;)
 						</div>
-					{% endfor %}
+					{% else %}
+						{% for aktualna_rozmowa in aktualne_rozmowy %}
+							<div class="chat_list active_chat">
+								<div class="chat_people">
+									<div class="chat_ib">
+										<h5>{{ aktualna_rozmowa.username }}, ogłoszenie "{{ aktualna_rozmowa.offer_name }}"</h5>
+									</div>
+									<a role="button" class="btn btn-primary" href="{{ base_url('rozmowy/index') }}/{{ aktualna_rozmowa.user_from }}/{{ aktualna_rozmowa.id_offer }}">Przejdź do rozmowy</a>
+								</div>
+							</div>
+						{% endfor %}
+					{% endif %}
 				</div>
 			</div>
 			<div class="mesgs">

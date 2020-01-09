@@ -22,10 +22,12 @@
 			{% for moderation_ad in moderation_ads %}
 				<div class="card mt-2">
 					<div class="row no-gutters">
-						<div class="col-auto">
-							<img src="{{ base_url('uploads/') }}{{ moderation_ad.main_image }}" class="center-cropped" alt="...">
-						</div>
-						<div class="col ">
+						{% if moderation_ad.main_image != false %}
+							<div class="col-auto">
+								<img src="{{ base_url('uploads/') }}{{ moderation_ad.main_image }}" class="center-cropped" alt="...">
+							</div>
+						{% endif %}
+						<div class="col">
 							<div class="card-header">{{moderation_ad.id_category}}</div>
 							<div class="card-body text-primary">
 								<h5 class="card-title">{{moderation_ad.offer_name}}</h5>
@@ -33,8 +35,6 @@
 							</div>
 							<div class="card-footer">
 								<a href="{{ base_url('ogloszenia/ad/') }}{{ moderation_ad.id_offer }}" class="btn btn-primary" role="button">Podgląd ogłoszenia</a>
-
-								<a href="#" class="btn btn-dark" role="button">Edycja ogłoszenie</a>
 								{% if 'ogloszenia:moderacja_akceptuj' in dostepneStrony and ad.accept == 0 %}<a href="{{ base_url('ogloszenia/moderacja_akceptuj/') }}{{ moderation_ad.id_offer }}" class="btn btn-dark" role="button">Akceptuj ogłoszenie</a>{% endif %}
 								{% if 'ogloszenia:moderacja_zakoncz' in dostepneStrony and ad.accept == 0 %}<a href="{{ base_url('ogloszenia/moderacja_zakoncz/') }}{{ moderation_ad.id_offer }}" class="btn btn-dark" role="button">Zakończ ogłoszenie</a>{% endif %}
 							</div>

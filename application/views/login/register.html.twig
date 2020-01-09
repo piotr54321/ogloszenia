@@ -1,7 +1,7 @@
 {# views/login/register.html.twig #}
 {% extends 'base.html.twig' %}
 
-{% block jsscripts %}
+{% block js_scripts %}
 <script>
     function passwordsEquals() {
         var password1 = document.getElementById("password").value;
@@ -11,25 +11,15 @@
 </script>
 {% endblock %}
 
-{% block navbar %}
-<nav class="navbar navbar-light mb-4">
-    <a class="navbar-brand">Ogłoszenia</a>
-</nav>
-{% endblock %}
 
 {% block body %}
-
     <div class="container">
         <div class="jumbotron">
             <h1 class="display-4">Rejestracja</h1>
         </div>
-
         {% if isgood %}
             <div class="alert alert-success">{{ isgood }}</div>
         {% else %}
-
-
-
             <form action="{{ site_url('login/register') }}" method="post">
                 <div class="form-group">
                     <label for="username">Nazwa użytkownika</label>

@@ -38,6 +38,7 @@
 						{% if 'ogloszenia:index' in dostepneStrony %}<a class="dropdown-item" href="{{ base_url('ogloszenia/index') }}">Moje ogłoszenia</a>{% endif %}
 						{% if 'ogloszenia:noweogloszenie' in dostepneStrony %}<a class="dropdown-item" href="{{ base_url('ogloszenia/noweogloszenie') }}">Dodaj ogłoszenie</a>{% endif %}
 						{% if 'ogloszenia:moderacja_index' in dostepneStrony %}<a class="dropdown-item" href="{{ base_url('ogloszenia/moderacja_index') }}">Moderacja ogłoszeniami</a>{% endif %}
+						{% if 'ogloszenia:ogloszenia_zakonczone' in dostepneStrony %}<a class="dropdown-item" href="{{ base_url('ogloszenia/ogloszenia_zakonczone') }}">Ogłoszenia zakończone</a>{% endif %}
 					</div>
 				</li>
 			{% endif %}
