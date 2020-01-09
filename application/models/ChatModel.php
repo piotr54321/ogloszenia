@@ -57,4 +57,17 @@ class ChatModel extends CI_Model
 			return false;
 		}
 	}
+
+	function saveMessage($data){
+		$this->db->set('id_offer', $data['id_offer']);
+		$this->db->set('id_user', $data['id_user']);
+		$this->db->set('text', $data['text']);
+		$this->db->set('reply', $data['reply']);
+		$this->db->insert('msgs');
+		if($this->db->affected_rows() > 0){
+			return true;
+		}else{
+			return false;
+		}
+	}
 }

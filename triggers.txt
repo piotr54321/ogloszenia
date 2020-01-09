@@ -1,0 +1,27 @@
+#dodaje rekord do historii walut
+CREATE TRIGGER `dodanie_historia_waluty_in` AFTER INSERT ON `uzytkownicy_portfel`
+ FOR EACH ROW BEGIN
+INSERT historia_transakcji_waluty (historia_transakcji_waluty.id_uzytkownika, historia_transakcji_waluty.id_waluty, historia_transakcji_waluty.ilosc) VALUES (new.id_uzytkownika, new.id_waluty, new.ilosc);
+END
+
+
+#dodaje rekord do historii walut
+CREATE TRIGGER `dodanie_historia_waluty_up` AFTER UPDATE ON `uzytkownicy_portfel`
+ FOR EACH ROW BEGIN
+INSERT historia_transakcji_waluty (historia_transakcji_waluty.id_uzytkownika, historia_transakcji_waluty.id_waluty, historia_transakcji_waluty.ilosc) VALUES (new.id_uzytkownika, new.id_waluty, (new.ilosc-old.ilosc));
+END
+
+`````````
+
+
+#dodaje rekord do historii walut
+CREATE TRIGGER `add_wallet_history_on_insert` AFTER INSERT ON `wallet`
+ FOR EACH ROW BEGIN
+INSERT wallet_history (wallet_history.id_user, wallet_history.id_wallet, wallet_history.type, wallet_history.amount) VALUES (new.id_user, new.id_wallet, 1, 100);
+END
+
+#dodaje rekord do historii walut
+CREATE TRIGGER `add_wallet_history_on_update` AFTER UPDATE ON `wallet`
+ FOR EACH ROW BEGIN
+INSERT wallet_history (wallet_history.id_user, wallet_history.id_wallet, wallet_history.type, wallet_history.amount) VALUES (new.id_user, new.id_wallet, 1, (new.amount - old.amount));
+END

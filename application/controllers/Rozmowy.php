@@ -24,19 +24,16 @@ class Rozmowy extends AC_Controller
     }
 
     function index(){
-    	//TODO
 		$this->data['segments'] = [
 			'user_id' => $id_user = $this->uri->segment(3, 0),
 			'offer_id' => $offer_id = $this->uri->segment(4, 0)
 		];
 
 		$this->data['aktualne_rozmowy'] = $this->ChatModel->getChats(['where' => ['offers.id_user' => $this->data['user']['id']]]);
-		//Kint::dump($this->data);
 		$this->twig->display('chat/index.html', $this->data);
     }
 
     function historia(){
-    	//TODO
 		$data = $this->page_data();
 		$this->twig->display('chat/historia.html', $data);
     }
@@ -51,7 +48,15 @@ class Rozmowy extends AC_Controller
 		echo $messeges;
 	}
 
-	function save_message(){
+	function post_message(){
 
+    	$reply = $this->data['user']['id'] == $this->input->post('user_id') ? 0 : 1;
+    	$msg_data = [
+    		'id_offer' => $this->input->post('offer_id'),
+			'id_user' => $this->input->post('user_id'),
+			'text' => $this->input->post('msg'),
+			'reply' => $reply
+		];
+		echo json_encode($this->ChatModel->saveMessage($msg_data));
 	}
 }

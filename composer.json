@@ -25,7 +25,8 @@
 	},
 	"require-dev": {
 		"mikey179/vfsStream": "1.1.*",
-		"phpunit/phpunit": "4.* || 5.*",
-		"kint-php/kint": "^3.3"
+		"phpunit/phpunit": "^5",
+		"kint-php/kint": "^3.3",
+		"kenjis/ci-phpunit-test": "^0.17.0"
 	}
 }

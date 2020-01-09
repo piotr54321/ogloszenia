@@ -44,12 +44,6 @@
 			<div class="mesgs">
 				{% if segments.offer_id != 0 %}
 					<div id="root"></div>
-					<div class="type_msg">
-						<div class="input_msg_write">
-							<input type="text" class="write_msg" placeholder="Wprowadź wiadomość" />
-							<button class="msg_send_btn" type="button"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></button>
-						</div>
-					</div>
 				{% else %}
 					<h1>Wybierz rozmowę z menu po lewej</h1>
 				{% endif %}
@@ -57,6 +51,54 @@
 		</div>
 		<hr/>
 		<script type="text/babel">
+			class ButtonSend extends React.Component{
+				constructor(props) {
+					super(props);
+					this.state = {
+						msg: ''
+					};
+					this.handleChange = this.handleChange.bind(this);
+					this.handleClick = this.handleClick.bind(this);
+				}
+
+				handleChange(event) {
+					const value = event.target.value;
+					this.setState({
+						...this.state,
+						[event.target.name]: value
+					});
+				}
+
+				handleClick(){
+					console.log(this.state.msg);
+					let formData = new FormData();
+					formData.append('msg', this.state.msg);
+					formData.append('user_id', {{ segments.user_id }});
+					formData.append('offer_id', {{ segments.offer_id }});
+
+					fetch('{{ base_url('rozmowy/post_message') }}',
+							{
+								body: formData,
+								method: "post"
+							}
+					);
+					this.setState({
+						msg: ''
+					});
+				}
+
+				render(){
+					return(
+						<div className="type_msg">
+							<div className="input_msg_write">
+								<input onChange={ this.handleChange } value={this.state.msg} name="msg" type="text" className="write_msg" placeholder="Wprowadź wiadomość" />
+								<button onClick={ this.handleClick } className="msg_send_btn" type="button"><i className="fa fa-paper-plane-o" aria-hidden="true"/></button>
+							</div>
+						</div>
+					)
+				}
+			}
+
 			function List(props) {
 				var chat_msg;
 				var fromUser = 1 == props.value.reply;
@@ -75,7 +117,7 @@
 			class ListChat extends React.Component {
 				constructor(props) {
 					super(props);
-					this.state = { msgs: [] };
+					this.state = { msgs: [], loading: true };
 					this.user_id = {{ user.id }};
 				}
 
@@ -87,6 +129,9 @@
 					}, 1000);
 				}
 				render() {
+					if(this.state.loading){
+						return <div>Ładowanie wiadomości...</div>
+					}
 					const productsList = this.state.msgs.map((product, key) =>{
 						return(
 								<List
@@ -106,7 +151,7 @@
 			}
 
 			ReactDOM.render(
-					<ListChat />,
+					<div><ListChat/><ButtonSend/></div>,
 					document.getElementById('root')
 			);
 

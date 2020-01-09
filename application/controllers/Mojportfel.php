@@ -48,7 +48,6 @@ class Mojportfel extends AC_Controller
     }
 
     function wplata(){
-    	//TODO
 		$paidStatus = $this->uri->segment(3, FALSE);
 		if($paidStatus == 'success'){
 			$this->session->set_flashdata('complete', 'Poprawnie wpłacono środki. Niedługo pojawią się one w portfelu.');
@@ -89,7 +88,6 @@ class Mojportfel extends AC_Controller
     }
 
     function historia(){
-    	//TODO
 		$this->data['historia'] = $this->HistoryModel->walletHistoryFind(['wallet_history.id_user' => $this->data['user']['id']]);
 		$this->twig->display('wallet/historia.html', $this->data);
     }
