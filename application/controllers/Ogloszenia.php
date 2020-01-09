@@ -373,12 +373,6 @@ class Ogloszenia extends AC_Controller
 		echo json_encode($this->AdsModel->chartData($adId));
 	}
 
-	function adsgrid(){
-		$this->data['dostepne_kategorie'] = $this->CategoriesModel->categoryFind(['categories.enable' => 1]);
-		$this->twig->display('ogloszenia/all.html', $this->data);
-		Kint::dump($this->data);
-	}
-
 	function zakoncz(int $adId){
 		if(!is_numeric($adId)){
 			$this->data['error'] = 'Nie podano ID ogłoszenia...';
@@ -427,5 +421,17 @@ class Ogloszenia extends AC_Controller
 				redirect('/ogloszenia/moderacja_index/', 'location');
 			}
 		}
+	}
+
+	function all(){
+		$categoryId = $this->uri->segment(3, 0);
+		if(is_numeric($categoryId) && $categoryId > 0){
+			$this->data['ads'] = $this->AdsModel->adsFind(['id_category' => $categoryId, 'ended' => 0, 'accept' => 1]);
+			$this->data['category_info'] = $this->CategoriesModel->categoryFind(['categories.id_category' => $categoryId])[0];
+		}else{
+			$this->data['ads'] = $this->AdsModel->adsFind(['ended' => 0, 'accept' => 1]);
+		}
+		$this->data['dostepne_kategorie'] = $this->CategoriesModel->categoryFind(['categories.enable' => 1]);
+		$this->twig->display('ogloszenia/all.html', $this->data);
 	}
 }

@@ -49,12 +49,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | Examples:	my-controller/index	-> my_controller/index
 |		my-controller/my-method	-> my_controller/my_method
 */
-$route['default_controller'] = 'home';
+$route['default_controller'] = 'ogloszenia/all';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 
 //Routes
 $route['ad/(:num)'] = 'ogloszenia/ad/$1';
-$route['all'] = 'ogloszenia/adsgrid';
+$route['all'] = 'ogloszenia/all';
+$route['home'] = 'ogloszenia/all';
 //Api Routes
 

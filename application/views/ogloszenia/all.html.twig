@@ -5,7 +5,7 @@
 {% block body %}
 	{% include 'page/alerts.html.twig' %}
 	<div class="container-fluid">
-		<h1>Ogłoszenia</h1>
+		<h2>Kategorie</h2>
 		<style>
 			.center-cropped {
 				width: 350px;
@@ -15,31 +15,42 @@
 				display: block;
 			}
 		</style>
-		{% for kategoria in dostepne_kategorie %}
 
-		{% endfor %}
+		<div class="d-flex flex-row flex-wrap">
+			<a href="{{ base_url('ogloszenia/all') }}" class="border p-2 w-50 list-group-item-action">
+				Wszystkie
+			</a>
+			{% for kategoria in dostepne_kategorie %}
+				<a href="{{ base_url('ogloszenia/all') }}/{{ kategoria.id_category }}" class="border p-2 w-50 list-group-item-action">
+					{{ kategoria.category_name }}
+				</a>
+			{% endfor %}
+		</div>
 
-
-		{% for my_ad in my_ads %}
-			<div class="blog-card{% if my_ad.accept == 0 %} alt{% endif %}">
-				<div class="meta">
-					<div class="photo" style="background-image: url({{ base_url('uploads/') }}{{ my_ad.main_image }})"></div>
-					<ul class="details">
-						<li class="author"><a href="#">Ty</a></li>
-						<li class="date">{{ my_ad.create_time }}</li>
-						<li class="tags"><a href="{{ base_url('ogloszenia/edycja/') }}{{ my_ad.id_offer }}">Edytuj ogłoszenie</a></li>
-						<li class="tags"><a href="{{ base_url('ogloszenia/statystyki/') }}{{ my_ad.id_offer }}">Statystyki ogłoszenia</a></li>
-					</ul>
-				</div>
-				<div class="description">
-					<h1>{{my_ad.offer_name}}</h1>
-					<h2>{{my_ad.category_path}}</h2>
-					<p> {{ my_ad.description }}</p>
-					<p class="read-more">
-						<a role="button" href="{{ base_url('ogloszenia/ad/') }}{{ my_ad.id_offer }}">Podgląd ogłoszenia</a>
-					</p>
-				</div>
+		<h1>Ogłoszenia{% if category_info %} - {{ category_info.category_name }}{% endif %}</h1>
+		{% if ads == false %}
+			<div class="alert alert-info" role="alert">
+				Brak ogłoszeń w tej kategorii, spróbuj wybrać inną
 			</div>
-		{% endfor %}
+		{% else %}
+			{% for my_ad in ads %}
+				<div class="blog-card{% if my_ad.accept == 0 %} alt{% endif %}">
+					<div class="meta">
+						<div class="photo" style="background-image: url({{ base_url('uploads/') }}{{ my_ad.main_image }})"></div>
+						<ul class="details">
+							<li class="date">{{ my_ad.create_time }}</li>
+						</ul>
+					</div>
+					<div class="description">
+						<h1>{{my_ad.offer_name}}</h1>
+						<h2>{{my_ad.category_path}}</h2>
+						<p> {{ my_ad.description }}</p>
+						<p class="read-more">
+							<a role="button" href="{{ base_url('ogloszenia/ad/') }}{{ my_ad.id_offer }}">Podgląd ogłoszenia</a>
+						</p>
+					</div>
+				</div>
+			{% endfor %}
+		{% endif %}
 	</div>
 {% endblock %}

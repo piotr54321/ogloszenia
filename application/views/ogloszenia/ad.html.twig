@@ -109,7 +109,7 @@
 									</div>
 								</div>
 							{% else %}
-								<a href="#" class="btn btn-lg btn-primary">Zaloguj się</a>
+								<a href="{{ base_url('login/index') }}" class="btn btn-lg btn-primary">Zaloguj się</a>
 							{% endif %}
 							{% if 'ogloszenia:moderacja_akceptuj' in dostepneStrony and ad.accept == 0 %}<a class="btn btn-lg btn-primary" href="{{ base_url('ogloszenia/moderacja_akceptuj/') }}{{ ad.id_offer }}">Akceptuj ogłoszenie</a>{% endif %}
 							{% if 'ogloszenia:moderacja_anuluj' in dostepneStrony and ad.accept == 1 %}<a class="btn btn-lg btn-primary" href="{{ base_url('ogloszenia/moderacja_anuluj/') }}{{ ad.id_offer }}">Anuluj ogłoszenie</a>{% endif %}
