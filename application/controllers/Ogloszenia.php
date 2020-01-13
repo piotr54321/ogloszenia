@@ -349,6 +349,10 @@ class Ogloszenia extends AC_Controller
 		}
 	}
 
+	/**
+	 * @param int $adId
+	 * Kontroler statystyk
+	 */
 	function statystyki(int $adId){
 		if(!is_numeric($adId)){
 			$this->data['error'] = 'Nie podano ID ogłoszenia...';
@@ -362,6 +366,9 @@ class Ogloszenia extends AC_Controller
 		$this->twig->display('ogloszenia/statystyki.html', $this->data);
 	}
 
+	/**
+	 * Metoda zwracająca dane JSON dla wykresu statystyk
+	 */
 	function dane_wykresu(){
 		$adId = $this->uri->segment(3, 0);
 		$this->output->enable_profiler(FALSE);

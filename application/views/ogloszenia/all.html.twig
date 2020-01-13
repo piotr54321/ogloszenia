@@ -6,15 +6,6 @@
 	{% include 'page/alerts.html.twig' %}
 	<div class="container-fluid">
 		<h2>Kategorie</h2>
-		<style>
-			.center-cropped {
-				width: 350px;
-				height: 250px;
-				overflow: hidden;
-				margin: auto;
-				display: block;
-			}
-		</style>
 
 		<div class="d-flex flex-row flex-wrap">
 			<a href="{{ base_url('ogloszenia/all') }}" class="border p-2 w-50 list-group-item-action">
@@ -33,20 +24,19 @@
 				Brak ogłoszeń w tej kategorii, spróbuj wybrać inną
 			</div>
 		{% else %}
-			{% for my_ad in ads %}
-				<div class="blog-card{% if my_ad.accept == 0 %} alt{% endif %}">
+			{% for ad in ads %}
+				<div class="blog-card{% if ad.accept == 0 %} alt{% endif %}">
 					<div class="meta">
-						<div class="photo" style="background-image: url({{ base_url('uploads/') }}{{ my_ad.main_image }})"></div>
+						<div class="photo" style="background-image: url({{ base_url('uploads/') }}{{ ad.main_image }})"></div>
 						<ul class="details">
-							<li class="date">{{ my_ad.create_time }}</li>
+							<li class="date">{{ ad.create_time }}</li>
 						</ul>
 					</div>
 					<div class="description">
-						<h1>{{my_ad.offer_name}}</h1>
-						<h2>{{my_ad.category_path}}</h2>
-						<p> {{ my_ad.description }}</p>
+						<h1>{{ ad.offer_name }}</h1>
+						<p> {{ ad.description }}</p>
 						<p class="read-more">
-							<a role="button" href="{{ base_url('ogloszenia/ad/') }}{{ my_ad.id_offer }}">Podgląd ogłoszenia</a>
+							<a role="button" href="{{ base_url('ogloszenia/ad/') }}{{ ad.id_offer }}">Podgląd ogłoszenia</a>
 						</p>
 					</div>
 				</div>

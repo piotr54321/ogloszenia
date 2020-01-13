@@ -11,12 +11,12 @@
                 <form action="{{ site_url('login') }}" method="post">
                     <div class="form-group">
                         <label for="username">Nazwa użytkownika</label>
-                        <input type="text" class="form-control{% if errors.username %} is-invalid{% endif %}" name="username" placeholder="Nazwa użytkownika">
+                        <input type="text" class="form-control{% if errors.username %} is-invalid{% endif %}" name="username" id="username" placeholder="Nazwa użytkownika">
                         {% if errors.username %}<div class="invalid-feedback">{{ errors.username }}</div>{% endif %}
                     </div>
                     <div class="form-group">
                         <label for="password">Hasło</label>
-                        <input type="password" class="form-control{% if errors.password %} is-invalid{% endif %}" name="password" placeholder="Hasło">
+                        <input type="password" class="form-control{% if errors.password %} is-invalid{% endif %}" name="password" id="password" placeholder="Hasło">
                         {% if errors.password %}<div class="invalid-feedback">{{ errors.password }}</div>{% endif %}
                     </div>
                     <button type="submit" class="btn btn-primary mb-2" name="submit" value="submit">Potwierdź</button>
