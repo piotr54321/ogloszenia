@@ -200,23 +200,19 @@ class Ogloszenia extends AC_Controller
 			'allowed_types' => 'jpg|png|jpeg',
 			'max_size' => '5000',
 		];
-
 		$imageInsert = [
 			'id_offer' => $dataOffer['insert_id'],
 			'id_user' => $dataOffer['id_user']
 		];
-
 		$count = count($_FILES['files']['name']);
 
-		for($i=0;$i<$count;$i++) {
+		for($i=0; $i<$count; $i++) {
 			if (!empty($_FILES['files']['name'][$i])) {
-
 				$_FILES['file']['name'] = $_FILES['files']['name'][$i];
 				$_FILES['file']['type'] = $_FILES['files']['type'][$i];
 				$_FILES['file']['tmp_name'] = $_FILES['files']['tmp_name'][$i];
 				$_FILES['file']['error'] = $_FILES['files']['error'][$i];
 				$_FILES['file']['size'] = $_FILES['files']['size'][$i];
-
 				$config['upload_path'] = 'uploads/';
 				$config['allowed_types'] = 'jpg|jpeg|png';
 				$config['max_size'] = '5000';
@@ -368,9 +364,9 @@ class Ogloszenia extends AC_Controller
 
 	function dane_wykresu(){
 		$adId = $this->uri->segment(3, 0);
-		header('Content-Type: application/json');
 		$this->output->enable_profiler(FALSE);
-		echo json_encode($this->AdsModel->chartData($adId));
+		header('Content-Type: application/json');
+		echo json_encode($this->AdsModel->chartData($adId)); // Wyświetlenie danych JSON dla wykresu
 	}
 
 	function zakoncz(int $adId){

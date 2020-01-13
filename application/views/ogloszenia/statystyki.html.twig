@@ -38,6 +38,7 @@
 					}
 
 					componentDidMount() {
+						// Odczyt danych JSON z metody kontrolera
 						fetch('{{ base_url('ogloszenia/dane_wykresu') }}/{{ id_offer }}')
 								.then(res => res.json())
 								.then(json => this.setState({chart_data: json, loading: false}));
@@ -46,29 +47,28 @@
 					render() {
 						var options = {
 							series: [{
-								name: 'Ilość odwiedzin',
-								type: 'column',
-								data: this.state.chart_data.y
+								name: 'Ilość odwiedzin', // Nazwa serii danych
+								type: 'column', // Typ wykresu
+								data: this.state.chart_data.y // Dane wykresu - oś Y
 							}],
 							chart: {
-								height: 350
+								height: 350 // Wysokość wykresu
 							},
 							stroke: {
 								width: [0, 4]
 							},
-							labels: this.state.chart_data.x,
+							labels: this.state.chart_data.x, // Dane, etykiety wykresu - oś X
 							yaxis: [{
 								title: {
-									text: 'Ilość odwiedzin',
-								},
-								min: 0
+									text: 'Ilość odwiedzin', // Tytuł osi Y
+								}
 							}]
 						};
 						var chart = new ApexCharts(document.querySelector("#chart"), options);
-						chart.render();
+						chart.render(); // Renderowanie wykresu
 
 						return (
-								<div id="chart"></div>
+								<div id="chart"/>
 						);
 					}
 				}
