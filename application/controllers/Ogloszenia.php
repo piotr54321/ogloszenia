@@ -213,13 +213,15 @@ class Ogloszenia extends AC_Controller
 				$_FILES['file']['tmp_name'] = $_FILES['files']['tmp_name'][$i];
 				$_FILES['file']['error'] = $_FILES['files']['error'][$i];
 				$_FILES['file']['size'] = $_FILES['files']['size'][$i];
-				$config['upload_path'] = 'uploads/';
-				$config['allowed_types'] = 'jpg|jpeg|png';
-				$config['max_size'] = '5000';
-				$config['file_name'] = $dataOffer['id_user']."l".$dataOffer['insert_id']."l";
+				$config['upload_path'] = 'uploads/'; // Ścieżka do
+				$config['allowed_types'] = 'jpg|jpeg|png'; // Dozwolone typy plików
+				$config['max_size'] = '5000'; // Maxymalny rozmiar pliku w kB
+				$config['file_name'] = $dataOffer['id_user']."l".$dataOffer['insert_id']."l"; // Nazwa pliku po wgraniu na serwer
 
-				$this->load->library('upload', $config);
-
+				$this->load->library('upload', $config); // Załadowanie konfiguracji do biblioteka File Upload
+				/*
+				 * Poniżej wgranie pliku na serwer oraz zapisanie do bazy nazwy pliku
+				 */
 				if ($this->upload->do_upload('file')) {
 					$uploadData = $this->upload->data();
 					$filename = $uploadData['file_name'];
@@ -351,7 +353,7 @@ class Ogloszenia extends AC_Controller
 
 	/**
 	 * @param int $adId
-	 * Kontroler statystyk
+	 * Metoda dla statystyk
 	 */
 	function statystyki(int $adId){
 		if(!is_numeric($adId)){

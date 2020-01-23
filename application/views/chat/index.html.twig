@@ -32,9 +32,12 @@
 							<div class="chat_list active_chat">
 								<div class="chat_people">
 									<div class="chat_ib">
-										<h5>{{ aktualna_rozmowa.username }}, ogłoszenie "{{ aktualna_rozmowa.offer_name }}"</h5>
+										<h5>{{ aktualna_rozmowa.username }}, ogłoszenie
+											"{{ aktualna_rozmowa.offer_name }}"</h5>
 									</div>
-									<a role="button" class="btn btn-primary" href="{{ base_url('rozmowy/index') }}/{{ aktualna_rozmowa.user_from }}/{{ aktualna_rozmowa.id_offer }}">Przejdź do rozmowy</a>
+									<a role="button" class="btn btn-primary"
+									   href="{{ base_url('rozmowy/index') }}/{{ aktualna_rozmowa.user_from }}/{{ aktualna_rozmowa.id_offer }}">Przejdź
+										do rozmowy</a>
 								</div>
 							</div>
 						{% endfor %}
@@ -51,7 +54,7 @@
 		</div>
 		<hr/>
 		<script type="text/babel">
-			class ButtonSend extends React.Component{
+			class ButtonSend extends React.Component {
 				constructor(props) {
 					super(props);
 					this.state = {
@@ -69,7 +72,7 @@
 					});
 				}
 
-				handleClick(){
+				handleClick() {
 					console.log(this.state.msg);
 					let formData = new FormData();
 					formData.append('msg', this.state.msg);
@@ -87,65 +90,65 @@
 					});
 				}
 
-				render(){
-					return(
-						<div className="type_msg">
-							<div className="input_msg_write">
-								<input onChange={ this.handleChange } value={this.state.msg} name="msg" type="text" className="write_msg" placeholder="Wprowadź wiadomość" />
-								<button onClick={ this.handleClick } className="msg_send_btn" type="button"><i className="fa fa-paper-plane-o" aria-hidden="true"/></button>
+				render() {
+					return (
+							<div className="type_msg">
+								<div className="input_msg_write">
+									<input onChange={this.handleChange} value={this.state.msg} name="msg" type="text"
+										   className="write_msg" placeholder="Wprowadź wiadomość"/>
+									<button onClick={this.handleClick} className="msg_send_btn" type="button"><i
+											className="fa fa-paper-plane-o" aria-hidden="true"/></button>
+								</div>
 							</div>
-						</div>
 					)
 				}
 			}
 
-			function List(props) {
+			function List(props) { // Element odpowiedzialny za widok pojedynczej wiadomości,
 				var chat_msg;
 				var fromUser = 1 == props.value.reply;
-				if(props.value.id_user == props.user_id){
+				if (props.value.id_user == props.user_id) {
 					fromUser = !fromUser;
 				}
-				if(fromUser){
-					chat_msg = <div className="outgoing_msg sent_msg"><p>{props.value.text}</p><span className="time_date">{props.value.time}</span></div>;
+				if (fromUser) {
+					chat_msg = <div className="outgoing_msg sent_msg"><p>{props.value.text}</p><span
+							className="time_date">{props.value.time}</span></div>;
 				} else {
-					chat_msg = <div className="incoming_msg received_msg received_withd_msg"><p>{props.value.text}</p><span className="time_date">{props.value.time}</span></div>;
+					chat_msg =
+							<div className="incoming_msg received_msg received_withd_msg"><p>{props.value.text}</p><span
+									className="time_date">{props.value.time}</span></div>;
 				}
-
 				return chat_msg;
 			}
 
 			class ListChat extends React.Component {
 				constructor(props) {
 					super(props);
-					this.state = { msgs: [], loading: true };
+					this.state = {msgs: [], loading: true};
 					this.user_id = {{ user.id }};
 				}
 
 				componentDidMount() {
+					/*
+						Odczyt wiadomości w formacie JSON, co sekundę, tak samo co sekundę będzie re-renderowany widok wiadomości
+					 */
 					setInterval(() => {
 						fetch('{{ base_url('rozmowy/get_messeges') }}/{{ segments.user_id }}/{{ segments.offer_id }}')
 								.then(res => res.json())
 								.then(json => this.setState({msgs: json, loading: false}));
 					}, 1000);
 				}
+
 				render() {
-					if(this.state.loading){
-						return <div>Ładowanie wiadomości...</div>
-					}
-					const productsList = this.state.msgs.map((product, key) =>{
-						return(
-								<List
-										value = {product}
-										key = {key}
-										user_id = {this.user_id}
-								/>
+					if (this.state.loading) return <div>Ładowanie wiadomości...</div>;
+					const productsList = this.state.msgs.map((product, key) => {
+						return (
+								<List value={product} key={key} user_id={this.user_id}/>
 						)
 					});
 
 					return (
-							<div className="msg_history">
-								{productsList}
-							</div>
+							<div className="msg_history">{productsList}</div>
 					);
 				}
 			}

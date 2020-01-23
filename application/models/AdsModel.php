@@ -292,8 +292,7 @@ class AdsModel extends CI_Model{
 			$keys = array_column($finalArray, 'x');
 			array_multisort($keys, SORT_ASC, $finalArray);
 			$outputData['x'] = array_column($finalArray, 'x');
-			$outputData['y'] = array_column($finalArray, 'y');
-			*/ // <- wypełnienie zerami tablicy $result w miejsach w których nie było ciągłości dla dat
+			$outputData['y'] = array_column($finalArray, 'y');*/// <- wypełnienie zerami tablicy $result w miejsach w których nie było ciągłości dla dat
 			return $outputData;
 		}else{
 			return false;
