@@ -106,17 +106,17 @@
 
 			function List(props) { // Element odpowiedzialny za widok pojedynczej wiadomości,
 				var chat_msg;
-				var fromUser = 1 == props.value.reply;
-				if (props.value.id_user == props.user_id) {
+				var fromUser = 1 === props.value.reply;
+				if (props.value.id_user === props.user_id) {
 					fromUser = !fromUser;
 				}
 				if (fromUser) {
-					chat_msg = <div className="outgoing_msg sent_msg"><p>{props.value.text}</p><span
-							className="time_date">{props.value.time}</span></div>;
+					chat_msg = <div className="outgoing_msg sent_msg"><p>{props.value.text}</p>
+						<span className="time_date">{props.value.time}</span></div>;
 				} else {
 					chat_msg =
-							<div className="incoming_msg received_msg received_withd_msg"><p>{props.value.text}</p><span
-									className="time_date">{props.value.time}</span></div>;
+							<div className="incoming_msg received_msg received_withd_msg"><p>{props.value.text}</p>
+								<span className="time_date">{props.value.time}</span></div>;
 				}
 				return chat_msg;
 			}

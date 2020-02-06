@@ -362,7 +362,9 @@ class Ogloszenia extends AC_Controller
 			$tablica_obserwacji = $this->AdsModel->observedFind(['id_offer' => $adId]);
 			$this->data['ilosc_obserwacji'] = is_array($tablica_obserwacji) ? count($tablica_obserwacji) : 0;
 			$this->data['ilosc_odpowiedzi'] = $this->AdsModel->countResponses($adId);
-			$this->data['ilosc_wyswietlen'] = array_sum(array_column($this->AdsModel->viewsFind(['id_offer' => $adId]), 'counter'));
+			$this->data['ilosc_wyswietlen'] = array_sum(
+				array_column($this->AdsModel->viewsFind(['id_offer' => $adId]), 'counter')
+			);
 			$this->data['id_offer'] = $adId;
 		}
 		$this->twig->display('ogloszenia/statystyki.html', $this->data);

@@ -62,10 +62,15 @@ class WalletModel extends CI_Model
 		}
 	}
 
+	/**
+	 * @param array $dataUpdate
+	 * @return bool
+	 */
 	function walletUpdate(array $dataUpdate)
 	{
 		//Sprawdzenie czy wszystkie parametry zostały poprawnie podane
-		if (!is_numeric($dataUpdate['id_currency']) || !is_numeric($dataUpdate['id_user']) || !is_bool($dataUpdate['operation']) || !is_numeric($dataUpdate['amount']) || $dataUpdate['amount'] <= 0) {
+		if (!is_numeric($dataUpdate['id_currency']) || !is_numeric($dataUpdate['id_user'])
+			|| !is_bool($dataUpdate['operation']) || !is_numeric($dataUpdate['amount']) || $dataUpdate['amount'] <= 0) {
 			return FALSE;
 		}
 
@@ -81,7 +86,7 @@ class WalletModel extends CI_Model
 		}
 
 		$operator = (($dataUpdate['operation'] == true) ? '+' : '-');
-		$this->db->set('amount', "amount".$operator.$dataUpdate['amount'], false);
+		$this->db->set('amount', "amount" . $operator . $dataUpdate['amount'], false);
 		issetWhere($this->db, $dataUpdate, 'id_user');
 		issetWhere($this->db, $dataUpdate, 'id_currency');
 		$this->db->update('wallet');

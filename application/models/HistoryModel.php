@@ -14,6 +14,7 @@ class HistoryModel extends CI_Model{
 		issetWhere($this->db, $dataFind, 'address_ip');
 		issetWhere($this->db, $dataFind, 'device');
 		issetWhere($this->db, $dataFind, 'login_time');
+		$this->db->order_by('id_login_history', 'ASC');
 
 		$query = $this->db->get();
 		if($query->num_rows() > 0){
@@ -47,6 +48,7 @@ class HistoryModel extends CI_Model{
 		issetWhere($this->db, $dataFind, 'wallet_history.id_wallet');
 		issetWhere($this->db, $dataFind, 'wallet_history.type');
 		issetWhere($this->db, $dataFind, 'wallet_history.amount');
+		$this->db->order_by('wallet_history.id', 'ASC');
 
 		$query = $this->db->get();
 		if($query->num_rows() > 0){

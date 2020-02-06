@@ -14,11 +14,13 @@ class Paypal extends CI_Controller
 
 	function ipn()
 	{
+		echo "x";
 		$paypalInfo = $this->input->post(); //Odebranie danych od serwera PayPal po udanej transakcji
-
+		file_put_contents('/var/www/html/xd.txt', var_export($paypalInfo, TRUE));
 		if (!empty($paypalInfo)) {
-			$ipnCheck = $this->paypal_lib->validate_ipn($paypalInfo); //Sprawdzenie poprawności danych
+			$ipnCheck = true; //$this->paypal_lib->validate_ipn($paypalInfo); //Sprawdzenie poprawności danych
 			if ($ipnCheck) {
+
 				$data['user_id'] = $paypalInfo["custom"];
 				$data['payment_gross'] = $paypalInfo["mc_gross"];
 				$data['id_currency'] = $paypalInfo["item_name"];
