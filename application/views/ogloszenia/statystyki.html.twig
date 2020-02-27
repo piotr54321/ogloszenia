@@ -38,7 +38,6 @@
 					}
 
 					componentDidMount() {
-						// Odczyt danych JSON z metody kontrolera
 						fetch('{{ base_url('ogloszenia/dane_wykresu') }}/{{ id_offer }}')
 								.then(res => res.json())
 								.then(json => this.setState({chart_data: json, loading: false}));
@@ -65,10 +64,10 @@
 							}]
 						};
 						var chart = new ApexCharts(document.querySelector("#chart"), options);
-						chart.render(); // Renderowanie wykresu
+						chart.render(); // Renderowanie wykresu, w wybranym
 
 						return (
-								<div id="chart"/> // Element #chart
+								<div id="chart"/>
 						);
 					}
 				}

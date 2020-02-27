@@ -27,7 +27,7 @@
 			{% for ad in ads %}
 				<div class="blog-card{% if ad.accept == 0 %} alt{% endif %}">
 					<div class="meta">
-						<div class="photo" style="background-image: url({{ base_url('uploads/') }}{{ ad.main_image }})"></div>
+						<div class="photo" style="background-image: url({{ base_url('uploads/') }}{% if ad.main_image  %}{{ ad.main_image }}{% else %}default.png{% endif %})"></div>
 						<ul class="details">
 							<li class="date">{{ ad.create_time }}</li>
 						</ul>

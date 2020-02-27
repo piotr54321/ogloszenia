@@ -200,28 +200,30 @@ class Ogloszenia extends AC_Controller
 			'allowed_types' => 'jpg|png|jpeg',
 			'max_size' => '5000',
 		];
+
 		$imageInsert = [
 			'id_offer' => $dataOffer['insert_id'],
 			'id_user' => $dataOffer['id_user']
 		];
+
 		$count = count($_FILES['files']['name']);
 
-		for($i=0; $i<$count; $i++) {
+		for($i=0;$i<$count;$i++) {
 			if (!empty($_FILES['files']['name'][$i])) {
+
 				$_FILES['file']['name'] = $_FILES['files']['name'][$i];
 				$_FILES['file']['type'] = $_FILES['files']['type'][$i];
 				$_FILES['file']['tmp_name'] = $_FILES['files']['tmp_name'][$i];
 				$_FILES['file']['error'] = $_FILES['files']['error'][$i];
 				$_FILES['file']['size'] = $_FILES['files']['size'][$i];
-				$config['upload_path'] = 'uploads/'; // Ścieżka do
-				$config['allowed_types'] = 'jpg|jpeg|png'; // Dozwolone typy plików
-				$config['max_size'] = '5000'; // Maxymalny rozmiar pliku w kB
-				$config['file_name'] = $dataOffer['id_user']."l".$dataOffer['insert_id']."l"; // Nazwa pliku po wgraniu na serwer
 
-				$this->load->library('upload', $config); // Załadowanie konfiguracji do biblioteka File Upload
-				/*
-				 * Poniżej wgranie pliku na serwer oraz zapisanie do bazy nazwy pliku
-				 */
+				$config['upload_path'] = 'uploads/';
+				$config['allowed_types'] = 'jpg|jpeg|png';
+				$config['max_size'] = '5000';
+				$config['file_name'] = $dataOffer['id_user']."l".$dataOffer['insert_id']."l";
+
+				$this->load->library('upload', $config);
+
 				if ($this->upload->do_upload('file')) {
 					$uploadData = $this->upload->data();
 					$filename = $uploadData['file_name'];
@@ -351,10 +353,6 @@ class Ogloszenia extends AC_Controller
 		}
 	}
 
-	/**
-	 * @param int $adId
-	 * Metoda dla statystyk
-	 */
 	function statystyki(int $adId){
 		if(!is_numeric($adId)){
 			$this->data['error'] = 'Nie podano ID ogłoszenia...';
@@ -362,22 +360,17 @@ class Ogloszenia extends AC_Controller
 			$tablica_obserwacji = $this->AdsModel->observedFind(['id_offer' => $adId]);
 			$this->data['ilosc_obserwacji'] = is_array($tablica_obserwacji) ? count($tablica_obserwacji) : 0;
 			$this->data['ilosc_odpowiedzi'] = $this->AdsModel->countResponses($adId);
-			$this->data['ilosc_wyswietlen'] = array_sum(
-				array_column($this->AdsModel->viewsFind(['id_offer' => $adId]), 'counter')
-			);
+			$this->data['ilosc_wyswietlen'] = array_sum(array_column($this->AdsModel->viewsFind(['id_offer' => $adId]), 'counter'));
 			$this->data['id_offer'] = $adId;
 		}
 		$this->twig->display('ogloszenia/statystyki.html', $this->data);
 	}
 
-	/**
-	 * Metoda zwracająca dane JSON dla wykresu statystyk
-	 */
 	function dane_wykresu(){
 		$adId = $this->uri->segment(3, 0);
-		$this->output->enable_profiler(FALSE);
 		header('Content-Type: application/json');
-		echo json_encode($this->AdsModel->chartData($adId)); // Wyświetlenie danych JSON dla wykresu
+		$this->output->enable_profiler(FALSE);
+		echo json_encode($this->AdsModel->chartData($adId));
 	}
 
 	function zakoncz(int $adId){

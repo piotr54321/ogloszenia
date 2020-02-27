@@ -2,40 +2,36 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-	<div class="container">
-		<div class="jumbotron">
-			<h1 class="display-4">Logowanie</h1>
-		</div>
-		<div class="row">
-			<div class="col">
-				<form action="{{ site_url('login') }}" method="post">
-					<div class="form-group">
-						<label for="username">Nazwa użytkownika</label>
-						<input type="text" class="form-control{% if errors.username %} is-invalid{% endif %}"
-							   name="username" id="username" placeholder="Nazwa użytkownika">
-						{% if errors.username %}
-							<div class="invalid-feedback">{{ errors.username }}</div>{% endif %}
-					</div>
-					<div class="form-group">
-						<label for="password">Hasło</label>
-						<input type="password" class="form-control{% if errors.password %} is-invalid{% endif %}"
-							   name="password" id="password" placeholder="Hasło">
-						{% if errors.password %}
-							<div class="invalid-feedback">{{ errors.password }}</div>{% endif %}
-					</div>
-					<button type="submit" class="btn btn-primary mb-2" name="submit" value="submit">Potwierdź</button>
-				</form>
-				{% if errors.other %}
-					<div class="alert alert-danger">{{ errors.other }}</div>
-				{% endif %}
-			</div>
-		</div>
-		<div class="row">
-			<div class="col">
-				<div class="alert alert-primary" role="alert">
-					Nie masz konta? <a href="{{ site_url('login/register') }}"><b>Zarejestruj się</b></a>
-				</div>
-			</div>
-		</div>
-	</div>
+    <div class="container">
+        <div class="jumbotron">
+            <h1 class="display-4">Logowanie</h1>
+        </div>
+        <div class="row">
+            <div class="col">
+                <form action="{{ site_url('login') }}" method="post">
+                    <div class="form-group">
+                        <label for="username">Nazwa użytkownika</label>
+                        <input type="text" class="form-control{% if errors.username %} is-invalid{% endif %}" name="username" id="username" placeholder="Nazwa użytkownika">
+                        {% if errors.username %}<div class="invalid-feedback">{{ errors.username }}</div>{% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Hasło</label>
+                        <input type="password" class="form-control{% if errors.password %} is-invalid{% endif %}" name="password" id="password" placeholder="Hasło">
+                        {% if errors.password %}<div class="invalid-feedback">{{ errors.password }}</div>{% endif %}
+                    </div>
+                    <button type="submit" class="btn btn-primary mb-2" name="submit" value="submit">Potwierdź</button>
+                </form>
+                {% if errors.other %}
+                    <div class="alert alert-danger">{{ errors.other }}</div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="alert alert-primary" role="alert">
+                    Nie masz konta? <a href="{{ site_url('login/register') }}"><b>Zarejestruj się</b></a>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

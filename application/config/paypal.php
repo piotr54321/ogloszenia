@@ -1,17 +1,21 @@
-<?php if (!defined('BASEPATH')) exit('No direct script access allowed');
+<?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 // ------------------------------------------------------------------------
 // Paypal library configuration
 // ------------------------------------------------------------------------
-/*
- * a.) jeżeli ustawione na TRUE to korzystamy z testowego systemu PayPal
- * b.) adres e-mail osoby która ma konto przedsiębiorcy w systemie PayPal,
- *    na ten adres dokonywane są wpłaty.
- * c.) główna waluta transackji
- */
-$config['sandbox'] = TRUE; // a.)
-$config['business'] = 'example@example.com'; // a.)
-$config['paypal_lib_currency_code'] = 'PLN'; // b.)
+
+// PayPal environment, Sandbox or Live
+$config['sandbox'] = TRUE; // FALSE for live environment
+
+// PayPal business email
+$config['business'] = 'bevegoxele@b2bx.net';
+
+// What is the default currency?
+$config['paypal_lib_currency_code'] = 'PLN';
+
+// Where is the button located at?
 $config['paypal_lib_button_path'] = 'assets/images/';
+
+// If (and where) to log ipn response in a file
 $config['paypal_lib_ipn_log'] = TRUE;
 $config['paypal_lib_ipn_log_file'] = BASEPATH . 'logs/paypal_ipn.log';

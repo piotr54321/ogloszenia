@@ -17,7 +17,7 @@ class AC_Controller extends CI_Controller{
         $class = $this->router->class;
         $method = $this->router->method;
         $this->classMethod = $class.':'.$method;
-        $this->output->enable_profiler(TRUE);
+        $this->output->enable_profiler(FALSE);
         $this->pageDisallowWhenLogged();
         $this->accessToPage();
     }
